@@ -5,9 +5,9 @@ public class DataService
 {
   private readonly ImdbContext _context;
 
-  public DataService()
+  public DataService(ImdbContext context)
   {
-    _context = new ImdbContext();
+    _context = context;
   }
 
   public List<TitleBasics> GetTitles()

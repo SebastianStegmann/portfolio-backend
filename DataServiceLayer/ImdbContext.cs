@@ -13,7 +13,7 @@ public class ImdbContext : DbContext
     public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
     public DbSet<TitleAka> TitleAka { get; set; }
 
-    // public ImdbContext(DbContextOptions<ImdbContext> options) : base(options) { }
+    public ImdbContext(DbContextOptions<ImdbContext> options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

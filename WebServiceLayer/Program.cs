@@ -8,6 +8,9 @@ builder.Configuration.AddJsonFile("config.json");
 
 var connectionString = builder.Configuration.GetSection("ConnectionString").Value;
 
+builder.Services.AddDbContext<ImdbContext>(options =>
+    options.UseNpgsql(connectionString));
+
 Console.WriteLine(connectionString);
 
 // Add services to the container.
