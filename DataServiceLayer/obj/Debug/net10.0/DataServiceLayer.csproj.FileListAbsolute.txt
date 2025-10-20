@@ -10,3 +10,4 @@
 /Users/ss/Developer/portfolio/DataServiceLayer/obj/Debug/net10.0/refint/DataServiceLayer.dll
 /Users/ss/Developer/portfolio/DataServiceLayer/obj/Debug/net10.0/DataServiceLayer.pdb
 /Users/ss/Developer/portfolio/DataServiceLayer/obj/Debug/net10.0/ref/DataServiceLayer.dll
+/Users/ss/Developer/portfolio/DataServiceLayer/obj/Debug/net10.0/DataServiceLayer.sourcelink.json
