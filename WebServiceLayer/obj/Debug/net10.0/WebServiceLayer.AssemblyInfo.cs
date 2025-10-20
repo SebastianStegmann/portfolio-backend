@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("08863d23-e848-4757-ac05-07a5098fef1f")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebServiceLayer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7d55eca7e66efa76e5db01c90b4ac126a5a4e21d")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebServiceLayer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebServiceLayer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

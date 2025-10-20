@@ -38,3 +38,4 @@
 /Users/ss/Developer/portfolio/WebServiceLayer/obj/Debug/net10.0/WebServiceLayer.pdb
 /Users/ss/Developer/portfolio/WebServiceLayer/obj/Debug/net10.0/WebServiceLayer.genruntimeconfig.cache
 /Users/ss/Developer/portfolio/WebServiceLayer/obj/Debug/net10.0/ref/WebServiceLayer.dll
+/Users/ss/Developer/portfolio/WebServiceLayer/obj/Debug/net10.0/WebServiceLayer.sourcelink.json
