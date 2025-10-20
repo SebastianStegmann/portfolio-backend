@@ -4,6 +4,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("config.json");
+
+var connectionString = builder.Configuration.GetSection("ConnectionString").Value;
+
+Console.WriteLine(connectionString);
+
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // builder.Services.AddOpenApi();
