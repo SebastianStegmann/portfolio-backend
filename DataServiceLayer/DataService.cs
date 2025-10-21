@@ -10,6 +10,8 @@ public class DataService
     _context = context;
   }
 
+    //Title
+
   public List<TitleBasics> GetTitles()
   {
     return _context.TitleBasics.ToList();
@@ -19,5 +21,17 @@ public class DataService
   {
     return _context.TitleBasics.Find(tconst);
   }
+
+    //Name
+
+    public List<NameBasics> GetNames()
+    {
+        return _context.NameBasics.ToList();
+    }
+
+    public NameBasics? GetName(string nconst)
+    {
+        return _context.NameBasics.Find(nconst);
+    }
 
 }
