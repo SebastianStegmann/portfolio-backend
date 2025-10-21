@@ -124,25 +124,25 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<Profession>().ToTable("profession");
         modelBuilder.Entity<Profession>(entity =>
         {
-            entity.HasKey(e => new { e.Id, e.ProfessionName });
-            entity.Property(e => e.Id).HasColumnName("Id");
+            entity.HasKey(e => e.Id);  
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ProfessionName).HasColumnName("profession");
-        });
-
-        modelBuilder.Entity<KnownFor>().ToTable("known_for");
-        modelBuilder.Entity<KnownFor>(entity =>
-        {
-            entity.HasKey(e => new { e.Nconst, e.Tconst });
-            entity.Property(e => e.Nconst).HasColumnName("nconst");
-            entity.Property(e => e.Tconst).HasColumnName("tconst");
         });
 
         modelBuilder.Entity<Role>().ToTable("role");
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => new { e.RoleId, e.RoleName });
+            entity.HasKey(e => e.RoleId);  
             entity.Property(e => e.RoleId).HasColumnName("id");
             entity.Property(e => e.RoleName).HasColumnName("role_name");
+        });
+
+        modelBuilder.Entity<KnownFor>().ToTable("known_for");
+        modelBuilder.Entity<KnownFor>(entity =>
+        {
+            entity.HasKey(e => new { e.Nconst, e.Tconst });  
+            entity.Property(e => e.Nconst).HasColumnName("nconst");
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
         });
     }
 }
