@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.Extensions.Logging;
 using DataServiceLayer.Models;
+using DataServiceLayer.Models.NameBasics;
 
 namespace DataServiceLayer;
 
@@ -16,6 +17,10 @@ public class ImdbContext : DbContext
 
     //Name
     public DbSet<NameBasics> NameBasics { get; set; }
+    public DbSet<NameProfession> NameProfessions { get; set; }
+    public DbSet<Profession> Professions { get; set; }
+    public DbSet<KnownFor> KnownFors { get; set; }
+    public DbSet<Role> Roles { get; set; }
 
     public ImdbContext(DbContextOptions<ImdbContext> options) : base(options) { }
 
@@ -27,6 +32,7 @@ public class ImdbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //Title
         modelBuilder.Entity<TitleBasics>().ToTable("title_basics");
         modelBuilder.Entity<TitleBasics>(entity =>
         {
@@ -95,6 +101,7 @@ public class ImdbContext : DbContext
             entity.Property(e => e.IsOriginalTitle).HasColumnName("isoriginaltitle");
         });
 
+        //Name
         modelBuilder.Entity<NameBasics>().ToTable("name_basics");
         modelBuilder.Entity<NameBasics>(entity =>
         {
@@ -104,6 +111,38 @@ public class ImdbContext : DbContext
             entity.Property(e => e.BirthYear).HasColumnName("birthyear");
             entity.Property(e => e.DeathYear).HasColumnName("deathyear");
             entity.Property(e => e.NameRating).HasColumnName("name_rating");
+        });
+
+        modelBuilder.Entity<NameProfession>().ToTable("name_profession");
+        modelBuilder.Entity<NameProfession>(entity =>
+        {
+            entity.HasKey(e => new { e.Nconst, e.ProfessionId });
+            entity.Property(e => e.Nconst).HasColumnName("nconst");
+            entity.Property(e => e.ProfessionId).HasColumnName("profession_id");
+        });
+
+        modelBuilder.Entity<Profession>().ToTable("profession");
+        modelBuilder.Entity<Profession>(entity =>
+        {
+            entity.HasKey(e => new { e.Id, e.ProfessionName });
+            entity.Property(e => e.Id).HasColumnName("Id");
+            entity.Property(e => e.ProfessionName).HasColumnName("profession");
+        });
+
+        modelBuilder.Entity<KnownFor>().ToTable("known_for");
+        modelBuilder.Entity<KnownFor>(entity =>
+        {
+            entity.HasKey(e => new { e.Nconst, e.Tconst });
+            entity.Property(e => e.Nconst).HasColumnName("nconst");
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+        });
+
+        modelBuilder.Entity<Role>().ToTable("role");
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => new { e.RoleId, e.RoleName });
+            entity.Property(e => e.RoleId).HasColumnName("id");
+            entity.Property(e => e.RoleName).HasColumnName("role_name");
         });
     }
 }
