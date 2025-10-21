@@ -6,6 +6,6 @@ namespace DataServiceLayer.Models.NameBasics;
 
 public class Role
 {
-    public string RoleId { get; set; } = string.Empty; // Can never be null, starts as ""
-    public string RoleName { get; set; }
+    public int RoleId { get; set; }
+    public string RoleName { get; set; } = string.Empty;
 }

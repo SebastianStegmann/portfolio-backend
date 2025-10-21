@@ -6,6 +6,6 @@ namespace DataServiceLayer.Models.NameBasics;
 
 public class Profession
 {
-    public string Id { get; set; } = string.Empty; // Can never be null, starts as ""
+    public int Id { get; set; } 
     public string? ProfessionName { get; set; }
 }
