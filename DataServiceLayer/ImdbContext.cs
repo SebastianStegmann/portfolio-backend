@@ -103,7 +103,7 @@ public class ImdbContext : DbContext
             entity.Property(e => e.Name).HasColumnName("name");
             entity.Property(e => e.BirthYear).HasColumnName("birthyear");
             entity.Property(e => e.DeathYear).HasColumnName("deathyear");
-            entity.Property(e => e.NameRating).HasColumnName("namerating");
+            entity.Property(e => e.NameRating).HasColumnName("name_rating");
         });
     }
 }
