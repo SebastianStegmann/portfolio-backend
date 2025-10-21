@@ -17,14 +17,14 @@ public class NamesController : Controller
     [HttpGet]
     public IActionResult GetNames()
     {
-        return Ok(_dataService.GetTitles());
+        return Ok(_dataService.GetNames());
     }
 
     [HttpGet("{nconst}")]
     public IActionResult GetNames(string nconst)
     {
-        var title = _dataService.GetName(nconst);
-        if (title == null) return NotFound();
-        return Ok(title);
+        var name = _dataService.GetName(nconst);
+        if (name == null) return NotFound();
+        return Ok(name);
     }
 }
