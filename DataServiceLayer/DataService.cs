@@ -1,4 +1,5 @@
 ﻿using DataServiceLayer.Models;
+using DataServiceLayer.Models.NameBasics;
 namespace DataServiceLayer;
 
 public class DataService
