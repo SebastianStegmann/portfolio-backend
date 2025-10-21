@@ -19,7 +19,6 @@ public class ImdbContext : DbContext
     {
         optionsBuilder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
         optionsBuilder.EnableSensitiveDataLogging();
-        //optionsBuilder.UseNpgsql("Host=localhost;Database=imdb;Username=postgres;Password=postgres");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
