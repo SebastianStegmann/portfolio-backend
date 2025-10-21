@@ -7,11 +7,15 @@ namespace DataServiceLayer;
 
 public class ImdbContext : DbContext
 {
+    //Title
     public DbSet<TitleBasics> TitleBasics { get; set; }
     public DbSet<TitleEpisode> TitleEpisodes { get; set; }
     public DbSet<TitleGenre> TitleGenres { get; set; }
     public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
     public DbSet<TitleAka> TitleAka { get; set; }
+
+    //Name
+    public DbSet<NameBasics> NameBasics { get; set; }
 
     public ImdbContext(DbContextOptions<ImdbContext> options) : base(options) { }
 
@@ -89,6 +93,17 @@ public class ImdbContext : DbContext
             entity.Property(e => e.Types).HasColumnName("types");
             entity.Property(e => e.Attributes).HasColumnName("attributes");
             entity.Property(e => e.IsOriginalTitle).HasColumnName("isoriginaltitle");
+        });
+
+        modelBuilder.Entity<NameBasics>().ToTable("name_basics");
+        modelBuilder.Entity<NameBasics>(entity =>
+        {
+            entity.HasKey(e => e.Nconst);
+            entity.Property(e => e.Nconst).HasColumnName("nconst");
+            entity.Property(e => e.Name).HasColumnName("name");
+            entity.Property(e => e.BirthYear).HasColumnName("birthyear");
+            entity.Property(e => e.DeathYear).HasColumnName("deathyear");
+            entity.Property(e => e.NameRating).HasColumnName("namerating");
         });
     }
 }
