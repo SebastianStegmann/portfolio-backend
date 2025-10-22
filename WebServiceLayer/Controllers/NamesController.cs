@@ -7,10 +7,10 @@ namespace WebServiceLayer.Controllers;
 [Route("api/[controller]")]
 public class NamesController : Controller
 {
-    private readonly DataService _dataService;
+    private readonly NameDataService _dataService;
 
     // Getting all actors
-    public NamesController(DataService dataService)
+    public NamesController(NameDataService dataService)
     {
         _dataService = dataService;
     }
