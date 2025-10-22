@@ -40,9 +40,9 @@ public class PersonDataService : BaseDataService
     }
 
     // rating
-    public List<Rating> GetRatingsByPersonId(int personId)
+    public List<IndividualRating> GetRatingsByPersonId(int personId)
     {
-        return _context.Ratings.Where(r => r.PersonId == personId).ToList();
+        return _context.IndividualRatings.Where(r => r.PersonId == personId).ToList();
     }
 }
 

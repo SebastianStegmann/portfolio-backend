@@ -27,7 +27,7 @@ public class ImdbContext : DbContext
     public DbSet<Person> Person { get; set; }
     public DbSet<SearchHistory> SearchHistories { get; set; }
     public DbSet<Bookmark> Bookmarks { get; set; }
-    public DbSet<Rating> Ratings { get; set; }
+    public DbSet<IndividualRating> IndividualRatings { get; set; }
 
 
     public ImdbContext(DbContextOptions<ImdbContext> options) : base(options) { }
@@ -189,9 +189,9 @@ public class ImdbContext : DbContext
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
         });
 
-        // rating
-        modelBuilder.Entity<Rating>().ToTable("individual_rating");
-        modelBuilder.Entity<Rating>(entity =>
+        // individual rating
+        modelBuilder.Entity<IndividualRating>().ToTable("individual_rating");
+        modelBuilder.Entity<IndividualRating>(entity =>
         {
             entity.HasKey(e => new { e.PersonId, e.Tconst });
             entity.Property(e => e.PersonId).HasColumnName("person_id");

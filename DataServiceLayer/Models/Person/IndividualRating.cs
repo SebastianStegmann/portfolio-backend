@@ -1,6 +1,6 @@
 namespace DataServiceLayer.Models;
 
-public class Rating
+public class IndividualRating
 {
     public int PersonId { get; set; }
     public string Tconst { get; set; } = null!;
