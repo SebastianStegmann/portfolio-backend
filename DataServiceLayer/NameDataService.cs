@@ -1,5 +1,6 @@
 ﻿using DataServiceLayer.Models;
 using DataServiceLayer.Models.NameBasics;
+using DataServiceLayer.Models.TitleBasics;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
