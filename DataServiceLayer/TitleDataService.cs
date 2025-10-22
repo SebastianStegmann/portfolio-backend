@@ -1,5 +1,6 @@
 using DataServiceLayer.Models;
 using DataServiceLayer.Models.NameBasics;
+using DataServiceLayer.Models.TitleBasics;
 namespace DataServiceLayer;
 
 public class TitleDataService : BaseDataService
@@ -18,9 +19,9 @@ public class TitleDataService : BaseDataService
     return _context.TitleBasics.Find(tconst);
   }
 
-    public List<TitleBasics> GetAllGenres()
+    public List<Genre> GetAllGenres()
     {
-        return _context.TitleBasics.ToList();
+        return _context.Genre.ToList();
     }
 }
 
