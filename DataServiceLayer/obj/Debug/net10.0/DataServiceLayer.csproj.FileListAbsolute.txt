@@ -11,3 +11,16 @@
 /Users/ss/Developer/portfolio/DataServiceLayer/obj/Debug/net10.0/DataServiceLayer.pdb
 /Users/ss/Developer/portfolio/DataServiceLayer/obj/Debug/net10.0/ref/DataServiceLayer.dll
 /Users/ss/Developer/portfolio/DataServiceLayer/obj/Debug/net10.0/DataServiceLayer.sourcelink.json
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\bin\Debug\net10.0\DataServiceLayer.deps.json
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\bin\Debug\net10.0\DataServiceLayer.dll
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\bin\Debug\net10.0\DataServiceLayer.pdb
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\obj\Debug\net10.0\DataServiceLayer.csproj.AssemblyReference.cache
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\obj\Debug\net10.0\DataServiceLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\obj\Debug\net10.0\DataServiceLayer.AssemblyInfoInputs.cache
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\obj\Debug\net10.0\DataServiceLayer.AssemblyInfo.cs
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\obj\Debug\net10.0\DataServiceLayer.csproj.CoreCompileInputs.cache
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\obj\Debug\net10.0\DataServiceLayer.sourcelink.json
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\obj\Debug\net10.0\DataServiceLayer.dll
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\obj\Debug\net10.0\refint\DataServiceLayer.dll
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\obj\Debug\net10.0\DataServiceLayer.pdb
+C:\Users\nikol\sem1\portfolio_project_2\portfolio-backend\DataServiceLayer\obj\Debug\net10.0\ref\DataServiceLayer.dll
