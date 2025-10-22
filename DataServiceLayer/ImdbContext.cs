@@ -23,6 +23,7 @@ public class ImdbContext : DbContext
     public DbSet<Profession> Professions { get; set; }
     public DbSet<KnownFor> KnownFors { get; set; }
     public DbSet<Role> Roles { get; set; }
+    public DbSet<NameTitleRole> NameTitleRoles { get; set; }
 
 
     // Person
