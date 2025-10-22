@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataServiceLayer.Models;
+using DataServiceLayer.Models.NameBasics;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataServiceLayer.Models.NameBasics
+namespace DataServiceLayer
 {
     public class NameDataService
     {
