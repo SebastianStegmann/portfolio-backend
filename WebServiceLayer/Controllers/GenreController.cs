@@ -1,4 +1,5 @@
 ﻿using DataServiceLayer;
+using DataServiceLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebServiceLayer.Controllers;
@@ -14,7 +15,7 @@ public class GenreController : ControllerBase
         _dataService = dataService;
     }
 
-    // Getting all professions
+    // Getting all genres
     [HttpGet]
     public IActionResult GetAllGenres()
     {
