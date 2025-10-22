@@ -23,6 +23,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<DataService>();
 builder.Services.AddScoped<NameDataService>();
+builder.Services.AddScoped<PersonDataService>();
 
 var app = builder.Build();
 
