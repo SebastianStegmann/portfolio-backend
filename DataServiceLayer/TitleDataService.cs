@@ -17,5 +17,10 @@ public class DataService : BaseDataService
   {
     return _context.TitleBasics.Find(tconst);
   }
+
+    public List<TitleBasics> GetAllGenres()
+    {
+        return _context.TitleBasics.ToList();
+    }
 }
 
