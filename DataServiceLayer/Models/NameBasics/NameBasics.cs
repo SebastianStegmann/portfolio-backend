@@ -10,5 +10,5 @@ public class NameBasics
     public string? Name { get; set; }
     public int? BirthYear { get; set; }
     public int? DeathYear { get; set; }
-    public string? NameRating { get; set; }
+    public decimal? NameRating { get; set; }
 }

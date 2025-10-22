@@ -1,15 +1,10 @@
-﻿using DataServiceLayer.Models;
+using DataServiceLayer.Models;
 using DataServiceLayer.Models.NameBasics;
 namespace DataServiceLayer;
 
-public class DataService
+public class DataService : BaseDataService
 {
-  private readonly ImdbContext _context;
-
-  public DataService(ImdbContext context)
-  {
-    _context = context;
-  }
+  public DataService(ImdbContext context) : base(context) { }
 
     //Title
 
@@ -23,3 +18,4 @@ public class DataService
     return _context.TitleBasics.Find(tconst);
   }
 }
+
