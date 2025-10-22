@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DataServiceLayer.Models;
+namespace DataServiceLayer.Models.TitleBasics;
 
 public class TitlePrincipal 
 {

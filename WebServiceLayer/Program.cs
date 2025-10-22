@@ -21,8 +21,10 @@ builder.Services.AddControllers();
 // builder.Services.AddDbContext<ImdbContext>(options =>
 //     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<DataService>();
+builder.Services.AddScoped<TitleDataService>();
 builder.Services.AddScoped<NameDataService>();
+builder.Services.AddScoped<PersonDataService>();
+
 
 var app = builder.Build();
 

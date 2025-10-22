@@ -1,4 +1,4 @@
-namespace DataServiceLayer.Models;
+namespace DataServiceLayer.Models.TitleBasics;
 
 public class Title 
 { 

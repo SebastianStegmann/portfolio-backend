@@ -3,6 +3,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using DataServiceLayer.Models;
 using DataServiceLayer.Models.NameBasics;
+using DataServiceLayer.Models.TitleBasics;
 
 namespace DataServiceLayer;
 
@@ -14,6 +15,7 @@ public class ImdbContext : DbContext
     public DbSet<TitleGenre> TitleGenres { get; set; }
     public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
     public DbSet<TitleAka> TitleAka { get; set; }
+    public DbSet<Genre> Genre { get; set; }
 
     //Name
     public DbSet<NameBasics> NameBasics { get; set; }
@@ -21,6 +23,14 @@ public class ImdbContext : DbContext
     public DbSet<Profession> Professions { get; set; }
     public DbSet<KnownFor> KnownFors { get; set; }
     public DbSet<Role> Roles { get; set; }
+
+
+    // Person
+    public DbSet<Person> Person { get; set; }
+    public DbSet<SearchHistory> SearchHistories { get; set; }
+    public DbSet<Bookmark> Bookmarks { get; set; }
+    public DbSet<IndividualRating> IndividualRatings { get; set; }
+
 
     public ImdbContext(DbContextOptions<ImdbContext> options) : base(options) { }
 
@@ -101,6 +111,31 @@ public class ImdbContext : DbContext
             entity.Property(e => e.IsOriginalTitle).HasColumnName("isoriginaltitle");
         });
 
+        modelBuilder.Entity<Genre>().ToTable("genre");
+        modelBuilder.Entity<Genre>(entity =>
+        {
+            entity.HasKey(e => e.GenreId);  
+            entity.Property(e => e.GenreId).HasColumnName("id");
+            entity.Property(e => e.GenreName).HasColumnName("genre");
+        });
+
+        modelBuilder.Entity<Award>().ToTable("award");
+        modelBuilder.Entity<Award>(entity =>
+        {
+            entity.HasKey(e => e.Tconst);
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+            entity.Property(e => e.AwardInfo).HasColumnName("award_info");
+        });
+
+        modelBuilder.Entity<OverallRating>().ToTable("overall_rating");
+        modelBuilder.Entity<OverallRating>(entity =>
+        {
+            entity.HasKey(e => e.Tconst);
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+            entity.Property(e => e.Rating).HasColumnName("rating");
+            entity.Property(e => e.Votes).HasColumnName("votes");
+        });
+
         //Name
         modelBuilder.Entity<NameBasics>().ToTable("name_basics");
         modelBuilder.Entity<NameBasics>(entity =>
@@ -140,9 +175,66 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<KnownFor>().ToTable("known_for");
         modelBuilder.Entity<KnownFor>(entity =>
         {
-            entity.HasKey(e => new { e.Nconst, e.Tconst });  
+            entity.HasKey(e => new { e.Nconst, e.Tconst });
             entity.Property(e => e.Nconst).HasColumnName("nconst");
             entity.Property(e => e.Tconst).HasColumnName("tconst");
+        });
+
+        modelBuilder.Entity<NameTitleRole>().ToTable("name_title_role");
+        modelBuilder.Entity<NameTitleRole>(entity =>
+        {
+            entity.HasKey(e => new { e.Nconst, e.Tconst, e.RoleId });
+            entity.Property(e => e.Nconst).HasColumnName("nconst");
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+            entity.Property(e => e.RoleId).HasColumnName("role_id");
+        });
+
+        // Person
+        modelBuilder.Entity<Person>().ToTable("person");
+        modelBuilder.Entity<Person>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name).HasColumnName("name");
+            entity.Property(e => e.Birthday).HasColumnName("birthday");
+            entity.Property(e => e.Location).HasColumnName("location");
+            entity.Property(e => e.Email).HasColumnName("email");
+            entity.Property(e => e.Password).HasColumnName("password");
+            entity.Property(e => e.LastLogin).HasColumnName("last_login");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+        });
+
+        // search history
+        modelBuilder.Entity<SearchHistory>().ToTable("search_history");
+        modelBuilder.Entity<SearchHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.PersonId).HasColumnName("person_id");
+            entity.Property(e => e.Search_string).HasColumnName("search_string");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+        });
+
+        // bookmarks
+        modelBuilder.Entity<Bookmark>().ToTable("bookmark");
+        modelBuilder.Entity<Bookmark>(entity =>
+        {
+            entity.HasKey(e => new { e.PersonId, e.Tconst });
+            entity.Property(e => e.PersonId).HasColumnName("person_id");
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+        });
+
+        // individual rating
+        modelBuilder.Entity<IndividualRating>().ToTable("individual_rating");
+        modelBuilder.Entity<IndividualRating>(entity =>
+        {
+            entity.HasKey(e => new { e.PersonId, e.Tconst });
+            entity.Property(e => e.PersonId).HasColumnName("person_id");
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+            entity.Property(e => e.RatingValue).HasColumnName("rating");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
         });
     }
 }
