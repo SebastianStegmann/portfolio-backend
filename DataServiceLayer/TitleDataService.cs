@@ -2,9 +2,9 @@ using DataServiceLayer.Models;
 using DataServiceLayer.Models.NameBasics;
 namespace DataServiceLayer;
 
-public class DataService : BaseDataService
+public class TitleDataService : BaseDataService
 {
-  public DataService(ImdbContext context) : base(context) { }
+  public TitleDataService(ImdbContext context) : base(context) { }
 
     //Title
 

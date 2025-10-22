@@ -8,9 +8,9 @@ namespace WebServiceLayer;
 [Route("api/[controller]")]
 public class TitlesController : ControllerBase
 {
-  private readonly DataService _dataService;
+  private readonly TitleDataService _dataService;
 
-  public TitlesController(DataService dataService)
+  public TitlesController(TitleDataService dataService)
   {
     _dataService = dataService;
   }

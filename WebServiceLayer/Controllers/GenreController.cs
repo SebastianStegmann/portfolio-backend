@@ -7,9 +7,9 @@ namespace WebServiceLayer.Controllers;
 [Route("api/[controller]")]
 public class GenreController : ControllerBase
 {
-    private readonly DataService _dataService;
+    private readonly TitleDataService _dataService;
 
-    public GenreController(DataService dataService)
+    public GenreController(TitleDataService dataService)
     {
         _dataService = dataService;
     }
