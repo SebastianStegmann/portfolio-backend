@@ -22,6 +22,7 @@ builder.Services.AddControllers();
 //     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<DataService>();
+builder.Services.AddScoped<NameDataService>();
 
 var app = builder.Build();
 
