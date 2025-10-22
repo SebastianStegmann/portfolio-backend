@@ -6,6 +6,6 @@ namespace DataServiceLayer.Models.TitleBasics;
 
 public class Genre
 {
-    public int GenreId { get; set; }
+    public short GenreId { get; set; }
     public string? GenreName { get; set; }
 }
