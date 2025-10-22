@@ -3,6 +3,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using DataServiceLayer.Models;
 using DataServiceLayer.Models.NameBasics;
+using DataServiceLayer.Models.TitleBasics;
 
 namespace DataServiceLayer;
 
@@ -14,6 +15,7 @@ public class ImdbContext : DbContext
     public DbSet<TitleGenre> TitleGenres { get; set; }
     public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
     public DbSet<TitleAka> TitleAka { get; set; }
+    public DbSet<Genre> Genre { get; set; }
 
     //Name
     public DbSet<NameBasics> NameBasics { get; set; }
@@ -107,6 +109,14 @@ public class ImdbContext : DbContext
             entity.Property(e => e.Types).HasColumnName("types");
             entity.Property(e => e.Attributes).HasColumnName("attributes");
             entity.Property(e => e.IsOriginalTitle).HasColumnName("isoriginaltitle");
+        });
+
+        modelBuilder.Entity<Genre>().ToTable("genre");
+        modelBuilder.Entity<Genre>(entity =>
+        {
+            entity.HasKey(e => e.GenreId);  
+            entity.Property(e => e.GenreId).HasColumnName("id");
+            entity.Property(e => e.GenreName).HasColumnName("genre");
         });
 
         //Name
