@@ -119,6 +119,23 @@ public class ImdbContext : DbContext
             entity.Property(e => e.GenreName).HasColumnName("genre");
         });
 
+        modelBuilder.Entity<Award>().ToTable("award");
+        modelBuilder.Entity<Award>(entity =>
+        {
+            entity.HasKey(e => e.Tconst);
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+            entity.Property(e => e.AwardInfo).HasColumnName("award_info");
+        });
+
+        modelBuilder.Entity<OverallRating>().ToTable("overall_rating");
+        modelBuilder.Entity<OverallRating>(entity =>
+        {
+            entity.HasKey(e => e.Tconst);
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+            entity.Property(e => e.Rating).HasColumnName("rating");
+            entity.Property(e => e.Votes).HasColumnName("votes");
+        });
+
         //Name
         modelBuilder.Entity<NameBasics>().ToTable("name_basics");
         modelBuilder.Entity<NameBasics>(entity =>
@@ -162,7 +179,16 @@ public class ImdbContext : DbContext
             entity.Property(e => e.Nconst).HasColumnName("nconst");
             entity.Property(e => e.Tconst).HasColumnName("tconst");
         });
-        
+
+        modelBuilder.Entity<NameTitleRole>().ToTable("name_title_role");
+        modelBuilder.Entity<NameTitleRole>(entity =>
+        {
+            entity.HasKey(e => new { e.Nconst, e.Tconst, e.RoleId });
+            entity.Property(e => e.Nconst).HasColumnName("nconst");
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+            entity.Property(e => e.RoleId).HasColumnName("role_id");
+        });
+
         // Person
         modelBuilder.Entity<Person>().ToTable("person");
         modelBuilder.Entity<Person>(entity =>
