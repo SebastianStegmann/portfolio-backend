@@ -21,7 +21,10 @@ public class NamesController : Controller
     [HttpGet]
     public IActionResult GetNames()
     {
-        return Ok(_dataService.GetNames());
+        var names = _dataService.GetNames()
+            .Select(x => CreateNameModel(x));
+
+        return Ok(names);
     }
 
     // Getting one actor by nconst - GET: api/names/{nconst}
