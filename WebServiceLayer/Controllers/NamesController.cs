@@ -30,15 +30,7 @@ public class NamesController : Controller
     {
         var name = _dataService.GetName(nconst);
         if (name == null) return NotFound();
-
-        var model = new NameModel
-        {
-            URL = GetUrl(name.Nconst),
-            Name = name.Name,
-            BirthYear = name.BirthYear,
-            DeathYear = name.DeathYear,
-            NameRating = name.NameRating
-        };
+        NameModel model = CreateNameModel(name);
 
         return Ok(model);
     }
@@ -112,6 +104,18 @@ public class NamesController : Controller
         var names = _dataService.GetNamesByRoleInTitle(tconst, roleId);
         if (names == null || names.Count == 0) return NotFound();
         return Ok(names);
+    }
+
+    private NameModel CreateNameModel(DataServiceLayer.Models.NameBasics.NameBasics name)
+    {
+        return new NameModel
+        {
+            URL = GetUrl(name.Nconst),
+            Name = name.Name,
+            BirthYear = name.BirthYear,
+            DeathYear = name.DeathYear,
+            NameRating = name.NameRating
+        };
     }
 
     private string? GetUrl(string nconst)
