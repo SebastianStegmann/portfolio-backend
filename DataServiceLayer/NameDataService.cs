@@ -18,7 +18,9 @@ public class NameDataService : BaseDataService
 
   public List<NameBasics> GetNames()
   {
-    return _context.NameBasics.ToList();
+    return _context.NameBasics
+        .Take(10) 
+        .ToList();
   }
 
   public NameBasics? GetName(string nconst)
