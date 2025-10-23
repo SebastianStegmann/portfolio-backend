@@ -1,5 +1,6 @@
 ﻿using DataServiceLayer;
 using Microsoft.AspNetCore.Mvc;
+using WebServiceLayer.Models;
 
 namespace WebServiceLayer.Controllers;
 
@@ -8,10 +9,12 @@ namespace WebServiceLayer.Controllers;
 public class NamesController : Controller
 {
     private readonly NameDataService _dataService;
+    private readonly LinkGenerator _generator;
 
-    public NamesController(NameDataService dataService)
+    public NamesController(NameDataService dataService, LinkGenerator generator)
     {
         _dataService = dataService;
+        _generator = generator;
     }
 
     // Getting all actors - GET: api/names
@@ -22,7 +25,7 @@ public class NamesController : Controller
     }
 
     // Getting one actor by nconst - GET: api/names/{nconst}
-    [HttpGet("{nconst}")]
+    [HttpGet("{nconst}", Name = "GetName")]
     public IActionResult GetNames(string nconst)
     {
         var name = _dataService.GetName(nconst);
@@ -30,7 +33,7 @@ public class NamesController : Controller
 
         var model = new NameModel
         {
-            URL = "http://localhost:5113/api/names/" + name.Nconst,
+            URL = GetUrl(name.Nconst),
             Name = name.Name,
             BirthYear = name.BirthYear,
             DeathYear = name.DeathYear,
@@ -111,4 +114,8 @@ public class NamesController : Controller
         return Ok(names);
     }
 
+    private string? GetUrl(string nconst)
+    {
+        return _generator.GetUriByName(HttpContext, "GetName", new { nconst });
+    }
 }
