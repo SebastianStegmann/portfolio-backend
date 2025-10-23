@@ -25,8 +25,8 @@ public class NamesController : Controller
     }
 
     // Getting one actor by nconst - GET: api/names/{nconst}
-    [HttpGet("{nconst}", Name = "GetName")]
-    public IActionResult GetNames(string nconst)
+    [HttpGet("{nconst}", Name = nameof(GetName))]
+    public IActionResult GetName(string nconst)
     {
         var name = _dataService.GetName(nconst);
         if (name == null) return NotFound();
@@ -116,6 +116,6 @@ public class NamesController : Controller
 
     private string? GetUrl(string nconst)
     {
-        return _generator.GetUriByName(HttpContext, "GetName", new { nconst });
+        return _generator.GetUriByName(HttpContext, nameof(GetName), new { nconst });
     }
 }
