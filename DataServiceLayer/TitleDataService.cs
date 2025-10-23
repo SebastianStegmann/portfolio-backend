@@ -19,9 +19,21 @@ public class TitleDataService : BaseDataService
     return _context.TitleBasics.Find(tconst);
   }
 
-    public List<Genre> GetAllGenres()
-    {
-        return _context.Genre.ToList();
-    }
+  public List<Genre> GetAllGenres()
+  {
+    return _context.Genre.ToList();
+  }
+
+  // awards 
+  public List<Award> GetAwardsByTconst(string tconst)
+  {
+    return _context.Awards.Where(a => a.Tconst == tconst).ToList();
+  } 
+  
+  // overall rating
+  public List<OverallRating> GetOverallRatings(string tconst)
+  {
+    return _context.OverallRatings.Where(a => a.Tconst == tconst).ToList();
+  }
 }
 

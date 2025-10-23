@@ -33,6 +33,12 @@ public class ImdbContext : DbContext
     public DbSet<IndividualRating> IndividualRatings { get; set; }
 
 
+    public DbSet<Award> Awards { get; set; }
+
+    // overall rating
+    public DbSet<OverallRating> OverallRatings { get; set; }
+
+
     public ImdbContext(DbContextOptions<ImdbContext> options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -236,6 +242,25 @@ public class ImdbContext : DbContext
             entity.Property(e => e.RatingValue).HasColumnName("rating");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+        });
+
+        // awards
+        modelBuilder.Entity<Award>().ToTable("award");
+        modelBuilder.Entity<Award>(entity =>
+        {
+            entity.HasKey(e => e.Tconst);
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+            entity.Property(e => e.AwardInfo).HasColumnName("award_info");
+        });
+
+        // overall rating
+        modelBuilder.Entity<OverallRating>().ToTable("overall_rating");
+        modelBuilder.Entity<OverallRating>(entity =>
+        {
+            entity.HasKey(e => e.Tconst);
+            entity.Property(e => e.Tconst).HasColumnName("tconst");
+            entity.Property(e => e.Rating).HasColumnName("rating");
+            entity.Property(e => e.Votes).HasColumnName("votes");
         });
     }
 }
