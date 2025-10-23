@@ -110,7 +110,7 @@ public class NamesController : Controller
     {
         return new NameModel
         {
-            URL = GetUrl(name.Nconst),
+            URL = GetUrl(nameof(GetName), new { name.Nconst }),
             Name = name.Name,
             BirthYear = name.BirthYear,
             DeathYear = name.DeathYear,
@@ -118,8 +118,8 @@ public class NamesController : Controller
         };
     }
 
-    private string? GetUrl(string nconst)
+    private string? GetUrl(string endpointName, object values)
     {
-        return _generator.GetUriByName(HttpContext, nameof(GetName), new { nconst });
+        return _generator.GetUriByName(HttpContext, endpointName, values);
     }
 }
