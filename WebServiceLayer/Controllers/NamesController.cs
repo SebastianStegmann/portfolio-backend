@@ -27,7 +27,17 @@ public class NamesController : Controller
     {
         var name = _dataService.GetName(nconst);
         if (name == null) return NotFound();
-        return Ok(name);
+
+        var model = new NameModel
+        {
+            URL = "http://localhost:5113/api/names/" + name.Nconst,
+            Name = name.Name,
+            BirthYear = name.BirthYear,
+            DeathYear = name.DeathYear,
+            NameRating = name.NameRating
+        };
+
+        return Ok(model);
     }
 
     // Getting the movies that the Actor is known for - GET: api/names/{nconst}/knownfor
