@@ -13,4 +13,10 @@
     <ProjectReference Include="..\DataServiceLayer\DataServiceLayer.csproj" />
   </ItemGroup>
 
+  
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
+  </ItemGroup>
+
 </Project>
