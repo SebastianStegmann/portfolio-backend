@@ -130,9 +130,15 @@ public class NamesController : BaseController<NameDataService>
         var model = _mapper.Map<NameModel>(name);
         model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
 
-        // A link of all the movies, the actor is known for
-        model.KnownForURL = GetUrl(nameof(GetKnownForTitles), new { nconst = name.Nconst.Trim() });  // ADD THIS LINE
-
+        // Only generate KnownForURL if the actor has titles
+        if (name.Titles != null && name.Titles.Any())
+        {
+            model.KnownForURL = GetUrl(nameof(GetKnownForTitles), new { nconst = name.Nconst.Trim() });
+        }
+        else
+        {
+            model.KnownForURL = null;  // Explicitly set to null if no titles
+        }
 
         return model;
     }
