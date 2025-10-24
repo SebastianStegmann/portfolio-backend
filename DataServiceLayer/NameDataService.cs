@@ -24,8 +24,8 @@ public class NameDataService : BaseDataService
     public List<NameBasics> GetNames(int page, int pageSize)
     {
         return _context.NameBasics
-            /*.Include(x => x.)
-            .OrderBy(x => x.Nconst)*/
+            /*.Include(x => x.)*/
+            .OrderBy(x => x.Nconst)
             .Skip(page * pageSize)
             .Take(pageSize)
             .ToList();
