@@ -6,14 +6,14 @@ using WebServiceLayer.Models;
 
 namespace WebServiceLayer.Controllers
 {
-    public class BaseController : ControllerBase
+    public class BaseController<TDataService> : ControllerBase where TDataService : BaseDataService
     {
-        protected readonly NameDataService _dataService;
+        protected readonly TDataService _dataService;
         protected readonly LinkGenerator _generator;
         protected readonly IMapper _mapper;
 
         public BaseController(
-            NameDataService dataService,
+            TDataService dataService,
             LinkGenerator generator,
             IMapper mapper)
         {
