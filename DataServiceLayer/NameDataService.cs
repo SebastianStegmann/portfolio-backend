@@ -16,14 +16,22 @@ public class NameDataService : BaseDataService
 
   //Name
 
-  public List<NameBasics> GetNames()
+  public int GetNamesCount()
   {
-    return _context.NameBasics
-        .Take(10) 
-        .ToList();
+    return _context.NameBasics.Count();
   }
 
-  public NameBasics? GetName(string nconst)
+    public List<NameBasics> GetNames(int page, int pageSize)
+    {
+        return _context.NameBasics
+            /*.Include(x => x.)
+            .OrderBy(x => x.Nconst)*/
+            .Skip(page * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
+
+    public NameBasics? GetName(string nconst)
   {
     return _context.NameBasics.Find(nconst);
   }
