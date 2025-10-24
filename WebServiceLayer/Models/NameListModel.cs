@@ -4,8 +4,6 @@
     {
         public string? URL { get; set; }
         public string? Name { get; set; }
-        public int? BirthYear { get; set; }
-        public int? DeathYear { get; set; }
-        public decimal? NameRating { get; set; }
+        public string? KnownForURL { get; set; }
     }
 }

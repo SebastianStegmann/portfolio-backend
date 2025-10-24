@@ -22,7 +22,7 @@ public class NamesController : BaseController<NameDataService>
         queryParams.PageSize = Math.Min(queryParams.PageSize, 10);
         var names = _dataService
             .GetNames(queryParams.Page, queryParams.PageSize)
-            .Select(x => CreateNameModel(x));
+            .Select(x => CreateNameListModel(x));
 
         var numOfItems = _dataService.GetNamesCount();
 
@@ -124,7 +124,25 @@ public class NamesController : BaseController<NameDataService>
         return Ok(names);
     }
 
+
     //object-object mapping
+
+    // Information shown when listing all the names
+    private NameListModel CreateNameListModel(DataServiceLayer.Models.NameBasics.NameBasics name)
+    {
+        var model = _mapper.Map<NameListModel>(name);
+        model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
+
+        // Only generate KnownForURL if the actor has titles
+        if (name.Titles != null && name.Titles.Any())
+        {
+            model.KnownForURL = GetUrl(nameof(GetKnownForTitles), new { nconst = name.Nconst.Trim() });
+        }
+
+        return model;
+    }
+
+    // Information shown when clicking on a specific name
     private NameModel CreateNameModel(DataServiceLayer.Models.NameBasics.NameBasics name)
     {
         var model = _mapper.Map<NameModel>(name);
