@@ -7,6 +7,10 @@
     <UserSecretsId>08863d23-e848-4757-ac05-07a5098fef1f</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
+  </ItemGroup>
+
   
 
   <ItemGroup>
