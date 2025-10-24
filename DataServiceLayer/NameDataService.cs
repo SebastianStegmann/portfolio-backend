@@ -24,7 +24,7 @@ public class NameDataService : BaseDataService
     public List<NameBasics> GetNames(int page, int pageSize)
     {
         return _context.NameBasics
-            /*.Include(x => x.)*/
+            .Include(x => x.Titles)
             .OrderBy(x => x.Nconst)
             .Skip(page * pageSize)
             .Take(pageSize)
@@ -33,7 +33,10 @@ public class NameDataService : BaseDataService
 
     public NameBasics? GetName(string nconst)
   {
-    return _context.NameBasics.Find(nconst);
+    return _context.NameBasics
+            .Include(n => n.Titles)
+            .FirstOrDefault(n => n.Nconst == nconst);
+ 
   }
 
   // THe movies that the Actor is known for
