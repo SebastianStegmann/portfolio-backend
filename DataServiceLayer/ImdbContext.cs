@@ -173,13 +173,25 @@ public class ImdbContext : DbContext
             entity.Property(e => e.RoleName).HasColumnName("role_name");
         });
 
-        modelBuilder.Entity<KnownFor>().ToTable("known_for");
-        modelBuilder.Entity<KnownFor>(entity =>
-        {
-            entity.HasKey(e => new { e.Nconst, e.Tconst });
-            entity.Property(e => e.Nconst).HasColumnName("nconst");
-            entity.Property(e => e.Tconst).HasColumnName("tconst");
-        });
+        // Configure the many-to-many relationship between NameBasics and TitleBasics
+        modelBuilder.Entity<NameBasics>()
+            .HasMany(n => n.Titles)
+            .WithMany()
+            .UsingEntity<KnownFor>(
+                j => j.HasOne<DataServiceLayer.Models.TitleBasics.TitleBasics>()
+                      .WithMany()
+                      .HasForeignKey(k => k.Tconst),
+                j => j.HasOne<NameBasics>()
+                      .WithMany()
+                      .HasForeignKey(k => k.Nconst),
+                j =>
+                {
+                    j.ToTable("known_for");
+                    j.HasKey(k => new { k.Nconst, k.Tconst });
+                    j.Property(k => k.Nconst).HasColumnName("nconst");
+                    j.Property(k => k.Tconst).HasColumnName("tconst");
+                }
+            );
 
         modelBuilder.Entity<NameTitleRole>().ToTable("name_title_role");
         modelBuilder.Entity<NameTitleRole>(entity =>
