@@ -113,7 +113,7 @@ public class NamesController : Controller
     {
         return new NameModel
         {
-            URL = GetUrl(nameof(GetName), new { name.Nconst }),
+            URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() }),
             Name = name.Name,
             BirthYear = name.BirthYear,
             DeathYear = name.DeathYear,
