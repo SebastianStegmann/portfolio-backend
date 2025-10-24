@@ -118,6 +118,15 @@ public class NamesController : BaseController<NameDataService>
     {
         var model = _mapper.Map<NameModel>(name);
         model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
+
+        //The first title, the actor is known for
+        var firstTitle = name.Titles?.FirstOrDefault();
+        if (firstTitle != null)
+        {
+            model.MovieTitle = firstTitle.PrimaryTitle;
+            model.TitleURL = GetUrl("GetTitle", new { Tconst = firstTitle.Tconst.Trim() });
+        }
+
         return model;
     }
 }
