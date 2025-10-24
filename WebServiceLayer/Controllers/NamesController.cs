@@ -1,4 +1,6 @@
 ﻿using DataServiceLayer;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebServiceLayer.Models;
 
@@ -10,11 +12,16 @@ public class NamesController : Controller
 {
     private readonly NameDataService _dataService;
     private readonly LinkGenerator _generator;
+    private readonly IMapper _mapper;
 
-    public NamesController(NameDataService dataService, LinkGenerator generator)
+    public NamesController(
+        NameDataService dataService,
+        LinkGenerator generator,
+        IMapper mapper)
     {
         _dataService = dataService;
         _generator = generator;
+        _mapper = mapper;
     }
 
     // Getting all actors - GET: api/names
@@ -112,14 +119,9 @@ public class NamesController : Controller
     //object-object mapping
     private NameModel CreateNameModel(DataServiceLayer.Models.NameBasics.NameBasics name)
     {
-        return new NameModel
-        {
-            URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() }),
-            Name = name.Name,
-            BirthYear = name.BirthYear,
-            DeathYear = name.DeathYear,
-            NameRating = name.NameRating
-        };
+        var model = _mapper.Map<NameModel>(name);
+        model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
+        return model;
     }
 
     private string? GetUrl(string endpointName, object values)
