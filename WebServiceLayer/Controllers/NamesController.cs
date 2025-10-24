@@ -25,13 +25,37 @@ public class NamesController : Controller
     }
 
     // Getting all actors - GET: api/names
-    [HttpGet]
-    public IActionResult GetNames()
+    [HttpGet(Name = nameof(GetNames))]
+    public IActionResult GetNames(int page = 0, int pageSize = 5)
     {
-        var names = _dataService.GetNames()
+        var names = _dataService
+            .GetNames(page, pageSize)
             .Select(x => CreateNameModel(x));
 
-        return Ok(names);
+        var numOfItems = _dataService.GetNamesCount();
+        var numPages = (int)Math.Ceiling((double)numOfItems / pageSize);
+
+        var prev = page > 0
+            ? GetUrl(nameof(GetNames), new { page = page - 1, pageSize })
+            : null;
+
+        var next = page < numPages - 1
+            ? GetUrl(nameof(GetNames), new { page = page + 1, pageSize })
+            : null;
+
+        var cur = GetUrl(nameof(GetNames), new { page, pageSize });
+
+        var result = new
+        {
+            Prev = prev,
+            Next = next,
+            Current = cur,
+            NumberOfPages = numPages,
+            NumberOfIems = numOfItems,
+            Items = names
+        };
+
+        return Ok(result);
     }
 
     // Getting one actor by nconst - GET: api/names/{nconst}
