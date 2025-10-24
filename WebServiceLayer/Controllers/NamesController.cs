@@ -8,7 +8,7 @@ namespace WebServiceLayer.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class NamesController : BaseController
+public class NamesController : BaseController<NameDataService>
 {
     public NamesController(
         NameDataService dataService,
