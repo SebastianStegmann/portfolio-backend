@@ -7,7 +7,6 @@
         public int? BirthYear { get; set; }
         public int? DeathYear { get; set; }
         public decimal? NameRating { get; set; }
-        public string? TitleURL { get; set; }
-        public string? MovieTitle { get; set; }
+        public string? KnownForURL { get; set; }
     }
 }

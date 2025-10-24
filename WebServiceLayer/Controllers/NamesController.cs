@@ -43,12 +43,23 @@ public class NamesController : BaseController<NameDataService>
     }
 
     // Getting the movies that the Actor is known for - GET: api/names/{nconst}/knownfor
-    [HttpGet("{nconst}/knownfor")]
+    [HttpGet("{nconst}/knownfor", Name = nameof(GetKnownForTitles))]
     public IActionResult GetKnownForTitles(string nconst)
     {
         var titles = _dataService.GetKnownForTitles(nconst);
         if (titles == null || titles.Count == 0) return NotFound();
-        return Ok(titles);
+
+        // Map to TitleModel with URLs
+        var titleModels = titles.Select(title => new TitleModel
+        {
+            URL = GetUrl("GetTitle", new { Tconst = title.Tconst.Trim() }),
+            PrimaryTitle = title.PrimaryTitle,
+            TitleType = title.TitleType,
+            ReleaseDate = title.ReleaseDate,
+            RuntimeMinutes = title.RuntimeMinutes,
+            Poster = title.Poster
+        });
+        return Ok(titleModels);
     }
 
     // Getting the professions for one actor - GET: api/names/{nconst}/professions
@@ -119,13 +130,9 @@ public class NamesController : BaseController<NameDataService>
         var model = _mapper.Map<NameModel>(name);
         model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
 
-        //The first title, the actor is known for
-        var firstTitle = name.Titles?.FirstOrDefault();
-        if (firstTitle != null)
-        {
-            model.MovieTitle = firstTitle.PrimaryTitle;
-            model.TitleURL = GetUrl("GetTitle", new { Tconst = firstTitle.Tconst.Trim() });
-        }
+        // A link of all the movies, the actor is known for
+        model.KnownForURL = GetUrl(nameof(GetKnownForTitles), new { nconst = name.Nconst.Trim() });  // ADD THIS LINE
+
 
         return model;
     }
