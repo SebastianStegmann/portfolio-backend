@@ -8,56 +8,25 @@ namespace WebServiceLayer.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class NamesController : Controller
+public class NamesController : BaseController
 {
-    private readonly NameDataService _dataService;
-    private readonly LinkGenerator _generator;
-    private readonly IMapper _mapper;
-
     public NamesController(
         NameDataService dataService,
         LinkGenerator generator,
-        IMapper mapper)
-    {
-        _dataService = dataService;
-        _generator = generator;
-        _mapper = mapper;
-    }
+        IMapper mapper) : base(dataService, generator, mapper){}
 
     // Getting all actors - GET: api/names
     [HttpGet(Name = nameof(GetNames))]
-    public IActionResult GetNames(int page = 0, int pageSize = 5)
+    public IActionResult GetNames([FromQuery] QueryParams queryParams)
     {
+        queryParams.PageSize = Math.Min(queryParams.PageSize, 10);
         var names = _dataService
-            .GetNames(page, pageSize)
+            .GetNames(queryParams.Page, queryParams.PageSize)
             .Select(x => CreateNameModel(x));
 
         var numOfItems = _dataService.GetNamesCount();
-        var numPages = (int)Math.Ceiling((double)numOfItems / pageSize);
 
-        var prev = page > 0
-            ? GetUrl(nameof(GetNames), new { page = page - 1, pageSize })
-            : null;
-
-        var next = page < numPages - 1
-            ? GetUrl(nameof(GetNames), new { page = page + 1, pageSize })
-            : null;
-
-        var first = GetUrl(nameof(GetNames), new { page = 0, pageSize });
-        var cur = GetUrl(nameof(GetNames), new { page, pageSize });
-        var last = GetUrl(nameof(GetNames), new { page = numPages - 1, pageSize });
-
-        var result = new
-        {
-            First = first,
-            Prev = prev,
-            Next = next,
-            Last = last,
-            Current = cur,
-            NumberOfPages = numPages,
-            NumberOfIems = numOfItems,
-            Items = names
-        };
+        var result = CreatePaging(nameof(GetNames), names, numOfItems, queryParams);
 
         return Ok(result);
     }
@@ -150,10 +119,5 @@ public class NamesController : Controller
         var model = _mapper.Map<NameModel>(name);
         model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
         return model;
-    }
-
-    private string? GetUrl(string endpointName, object values)
-    {
-        return _generator.GetUriByName(HttpContext, endpointName, values);
     }
 }
