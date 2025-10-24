@@ -43,12 +43,16 @@ public class NamesController : Controller
             ? GetUrl(nameof(GetNames), new { page = page + 1, pageSize })
             : null;
 
+        var first = GetUrl(nameof(GetNames), new { page = 0, pageSize });
         var cur = GetUrl(nameof(GetNames), new { page, pageSize });
+        var last = GetUrl(nameof(GetNames), new { page = numPages - 1, pageSize });
 
         var result = new
         {
+            First = first,
             Prev = prev,
             Next = next,
+            Last = last,
             Current = cur,
             NumberOfPages = numPages,
             NumberOfIems = numOfItems,
