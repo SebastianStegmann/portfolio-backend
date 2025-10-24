@@ -109,6 +109,7 @@ public class NamesController : Controller
         return Ok(names);
     }
 
+    //object-object mapping
     private NameModel CreateNameModel(DataServiceLayer.Models.NameBasics.NameBasics name)
     {
         return new NameModel
