@@ -3,13 +3,13 @@
 public class QueryParams
 {
     private const int MaxPageSize = 25;
-    public int PageSize { get; set; } = 10;
 
-    private int page = 0;
-
-    public int Page
+    private int pageSize = 10;
+    public int PageSize
     {
-        get { return page; }
-        set { page = value > MaxPageSize ? MaxPageSize : value; }
+        get { return pageSize; }
+        set { pageSize = value > MaxPageSize ? MaxPageSize : (value < 1 ? 10 : value); }
     }
+
+    public int Page { get; set; } = 0;
 }
