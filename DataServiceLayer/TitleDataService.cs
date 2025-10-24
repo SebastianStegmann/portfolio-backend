@@ -1,6 +1,11 @@
 using DataServiceLayer.Models;
 using DataServiceLayer.Models.NameBasics;
 using DataServiceLayer.Models.TitleBasics;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace DataServiceLayer;
 
 public class TitleDataService : BaseDataService
@@ -9,12 +14,22 @@ public class TitleDataService : BaseDataService
 
     //Title
 
-  public List<TitleBasics> GetTitles()
-  {
-    return _context.TitleBasics.ToList();
-  }
+    public int GetTitlesCount()
+    {
+        return _context.TitleBasics.Count();
+    }
 
-  public TitleBasics? GetTitle(string tconst)
+    public List<TitleBasics> GetTitles(int page, int pageSize)
+    {
+        return _context.TitleBasics
+            /*.Include(x => x.)*/
+            .OrderBy(x => x.Tconst)
+            .Skip(page * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
+
+    public TitleBasics? GetTitle(string tconst)
   {
     return _context.TitleBasics.Find(tconst);
   }
