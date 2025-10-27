@@ -147,4 +147,12 @@ public class NameDataService : BaseDataService
     {
         return _context.Roles.ToList();
     }
+
+
+    // Helpers
+    // Check if a name has any known titles (queries database directly)
+    public bool HasKnownForTitles(string nconst)
+    {
+        return _context.KnownFors.Any(kf => kf.Nconst == nconst);
+    }
 }

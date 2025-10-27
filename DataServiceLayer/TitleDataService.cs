@@ -66,5 +66,13 @@ public class TitleDataService : BaseDataService
   {
     return _context.OverallRatings.Where(a => a.Tconst == tconst).ToList();
   }
+
+
+    // Helpers
+    // Check if a name has any known titles (queries database directly)
+    public bool HasKnownForTitles(string nconst)
+    {
+        return _context.KnownFors.Any(kf => kf.Nconst == nconst);
+    }
 }
 
