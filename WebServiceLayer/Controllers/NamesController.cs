@@ -133,8 +133,15 @@ public class NamesController : BaseController<NameDataService>
         var model = _mapper.Map<NameListModel>(name);
         model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
 
-        // Only generate KnownForURL if the actor has titles
+        /* Only generate KnownForURL if the actor has titles
         if (name.Titles != null && name.Titles.Any())
+        {
+            model.KnownForURL = GetUrl(nameof(GetKnownForTitles), new { nconst = name.Nconst.Trim() });
+        }
+        */
+
+        // Check database directly instead of navigation property
+        if (_dataService.HasKnownForTitles(name.Nconst.Trim()))
         {
             model.KnownForURL = GetUrl(nameof(GetKnownForTitles), new { nconst = name.Nconst.Trim() });
         }
@@ -148,7 +155,7 @@ public class NamesController : BaseController<NameDataService>
         var model = _mapper.Map<NameModel>(name);
         model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
 
-        // Only generate KnownForURL if the actor has titles
+        /* Only generate KnownForURL if the actor has titles
         if (name.Titles != null && name.Titles.Any())
         {
             model.KnownForURL = GetUrl(nameof(GetKnownForTitles), new { nconst = name.Nconst.Trim() });
@@ -156,6 +163,13 @@ public class NamesController : BaseController<NameDataService>
         else
         {
             model.KnownForURL = null;  // Explicitly set to null if no titles
+        }
+        */
+
+        // Check database directly instead of navigation property
+        if (_dataService.HasKnownForTitles(name.Nconst.Trim()))
+        {
+            model.KnownForURL = GetUrl(nameof(GetKnownForTitles), new { nconst = name.Nconst.Trim() });
         }
 
         return model;
