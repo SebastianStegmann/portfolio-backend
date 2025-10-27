@@ -4,6 +4,7 @@ using DataServiceLayer.Models.TitleBasics;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DataServiceLayer;
@@ -37,6 +38,18 @@ public class TitleDataService : BaseDataService
   public List<Genre> GetAllGenres()
   {
     return _context.Genres.ToList();
+  }
+
+  // Get all actors (names) known for a specific movie
+  public List<NameBasics> GetActorsForTitle(string tconst)
+  {
+    return _context.KnownFors
+      .Where(kf => kf.Tconst == tconst)
+      .Join(_context.NameBasics,
+          kf => kf.Nconst,
+          nb => nb.Nconst,
+          (kf, nb) => nb)
+      .ToList();
   }
 
   // awards 

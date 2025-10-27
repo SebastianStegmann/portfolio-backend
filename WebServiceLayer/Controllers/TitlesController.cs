@@ -44,17 +44,26 @@ public class TitlesController : BaseController<TitleDataService>
     return Ok(model);
   }
 
-  //object-object mapping
-  private TitleModel CreateTitleModel(DataServiceLayer.Models.TitleBasics.TitleBasics title)
-  {
-    var model = _mapper.Map<TitleModel>(title);
-    model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });
-    return model;
-  }
+    // Getting all names known for a specific title - GET: api/{tconst}/allactors
+    [HttpGet("titles/{tconst}/allactors", Name = nameof(GetActorsForTitle))]
+    public IActionResult GetActorsForTitle(string tconst)
+    {
+        var names = _dataService.GetActorsForTitle(tconst);
+        if (names == null || names.Count == 0) return NotFound();
 
+        //Map tp NameLIstModel with URLs
+        var nameModel = names.Select(name => new NameListModel
+        {
+            URL = GetUrl("GetName", new { Nconst = name.Nconst.Trim() }),
+            Name = name.Name,
+            KnownForURL = GetUrl("GetKnownForTitles", new { Nconst = name.Nconst.Trim() })
+        });
 
-  // awards endpoint
-  [HttpGet("{tconst}/awards")]
+        return Ok(nameModel);
+    }
+
+    // awards endpoint
+    [HttpGet("{tconst}/awards")]
   public IActionResult GetAwardsByTconst(string tconst)
   {
     var awards = _dataService.GetAwardsByTconst(tconst);
@@ -68,4 +77,12 @@ public class TitlesController : BaseController<TitleDataService>
     var overallRatings = _dataService.GetOverallRatings(tconst);
     return Ok(overallRatings);
   }
+
+    //object-object mapping
+    private TitleModel CreateTitleModel(DataServiceLayer.Models.TitleBasics.TitleBasics title)
+    {
+        var model = _mapper.Map<TitleModel>(title);
+        model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });
+        return model;
+    }
 }
