@@ -22,7 +22,6 @@ public class TitlesController : BaseController<TitleDataService>
   [HttpGet(Name = nameof(GetTitles))]
   public IActionResult GetTitles([FromQuery] QueryParams queryParams)
   {
-    queryParams.PageSize = Math.Min(queryParams.PageSize, 10);
     var titles = _dataService
         .GetTitles(queryParams.Page, queryParams.PageSize)
         .Select(x => CreateTitleListModel(x));
