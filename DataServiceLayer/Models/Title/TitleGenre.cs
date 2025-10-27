@@ -1,4 +1,4 @@
-namespace DataServiceLayer.Models.TitleBasics;
+namespace DataServiceLayer.Models.Title;
 
 public class TitleGenre
 {

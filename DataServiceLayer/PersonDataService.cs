@@ -1,5 +1,6 @@
 using DataServiceLayer.Models;
-using DataServiceLayer.Models.NameBasics;
+using DataServiceLayer.Models.Name;
+using DataServiceLayer.Models.Person;
 namespace DataServiceLayer;
 
 public class PersonDataService : BaseDataService

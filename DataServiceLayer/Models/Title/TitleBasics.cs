@@ -1,6 +1,6 @@
-using NameBasicsModel = DataServiceLayer.Models.NameBasics.NameBasics;
+using NameBasicsModel = DataServiceLayer.Models.Name.NameBasics;
 
-namespace DataServiceLayer.Models.TitleBasics;
+namespace DataServiceLayer.Models.Title;
 
 public class TitleBasics
 {

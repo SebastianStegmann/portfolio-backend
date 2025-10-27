@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataServiceLayer.Models.NameBasics;
+namespace DataServiceLayer.Models.Name;
 
 public class Role
 {

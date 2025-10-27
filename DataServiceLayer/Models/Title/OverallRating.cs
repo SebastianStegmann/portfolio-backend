@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataServiceLayer.Models.TitleBasics;
+namespace DataServiceLayer.Models.Title;
 
 public class OverallRating
 {

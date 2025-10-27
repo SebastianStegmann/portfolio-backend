@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using DataServiceLayer.Models.TitleBasics;
-using TitleBasicsModel = DataServiceLayer.Models.TitleBasics.TitleBasics;
+using DataServiceLayer.Models.Title;
+using TitleBasicsModel = DataServiceLayer.Models.Title.TitleBasics;
 
-namespace DataServiceLayer.Models.NameBasics;
+namespace DataServiceLayer.Models.Name;
 
 public class NameBasics
 {

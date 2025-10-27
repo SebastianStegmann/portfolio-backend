@@ -1,5 +1,5 @@
 using DataServiceLayer;
-using DataServiceLayer.Models.TitleBasics;
+using DataServiceLayer.Models.Title;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
@@ -82,7 +82,7 @@ public class TitlesController : BaseController<TitleDataService>
     //object-object mapping
 
     // Information shown when listing all the titles
-    private TitleListModel CreateTitleListModel(DataServiceLayer.Models.TitleBasics.TitleBasics title)
+    private TitleListModel CreateTitleListModel(DataServiceLayer.Models.Title.TitleBasics title)
     {
         var model = _mapper.Map<TitleListModel>(title);
         model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });
@@ -97,7 +97,7 @@ public class TitlesController : BaseController<TitleDataService>
     }
 
     // Information shown when clicking on a specific title
-    private TitleModel CreateTitleModel(DataServiceLayer.Models.TitleBasics.TitleBasics title)
+    private TitleModel CreateTitleModel(DataServiceLayer.Models.Title.TitleBasics title)
     {
         var model = _mapper.Map<TitleModel>(title);
         model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });

@@ -1,5 +1,5 @@
 ﻿using DataServiceLayer;
-using DataServiceLayer.Models.TitleBasics;
+using DataServiceLayer.Models.Title;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -128,7 +128,7 @@ public class NamesController : BaseController<NameDataService>
     //object-object mapping
 
     // Information shown when listing all the names
-    private NameListModel CreateNameListModel(DataServiceLayer.Models.NameBasics.NameBasics name)
+    private NameListModel CreateNameListModel(DataServiceLayer.Models.Name.NameBasics name)
     {
         var model = _mapper.Map<NameListModel>(name);
         model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
@@ -143,7 +143,7 @@ public class NamesController : BaseController<NameDataService>
     }
 
     // Information shown when clicking on a specific name
-    private NameModel CreateNameModel(DataServiceLayer.Models.NameBasics.NameBasics name)
+    private NameModel CreateNameModel(DataServiceLayer.Models.Name.NameBasics name)
     {
         var model = _mapper.Map<NameModel>(name);
         model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });

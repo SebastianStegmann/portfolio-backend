@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Konscious.Security.Cryptography;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
-using DataServiceLayer.Models;
+using DataServiceLayer.Models.Person;
 
 namespace WebServiceLayer;
 

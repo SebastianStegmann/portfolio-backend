@@ -1,4 +1,4 @@
-namespace DataServiceLayer.Models;
+namespace DataServiceLayer.Models.Person;
 
 public class Bookmark
 {

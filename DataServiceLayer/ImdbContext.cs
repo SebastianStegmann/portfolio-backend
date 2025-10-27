@@ -2,8 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.Extensions.Logging;
 using DataServiceLayer.Models;
-using DataServiceLayer.Models.NameBasics;
-using DataServiceLayer.Models.TitleBasics;
+using DataServiceLayer.Models.Name;
+using DataServiceLayer.Models.Title;
+using DataServiceLayer.Models.Person;
 
 namespace DataServiceLayer;
 
@@ -180,7 +181,7 @@ public class ImdbContext : DbContext
             .HasMany(n => n.Titles)
             .WithMany(t => t.Names)
             .UsingEntity<KnownFor>(
-                j => j.HasOne<DataServiceLayer.Models.TitleBasics.TitleBasics>()
+                j => j.HasOne<DataServiceLayer.Models.Title.TitleBasics>()
                       .WithMany()
                       .HasForeignKey(k => k.Tconst),
                 j => j.HasOne<NameBasics>()
