@@ -56,7 +56,7 @@ public class TitleDataService : BaseDataService
             Nconst = nb.Nconst,
             Name = nb.Name,
             Category = tp.Category,
-            Characters = tp.Characters,
+            Characters = CharacterName(tp.Characters),
             Job = tp.Job,
             Ordering = tp.Ordering
           })
@@ -82,6 +82,20 @@ public class TitleDataService : BaseDataService
     public bool HasKnownForTitles(string nconst)
     {
         return _context.KnownFors.Any(kf => kf.Nconst == nconst);
+    }
+
+    // Cleaning the Charactername
+    private static string? CharacterName(string? characters)
+    {
+        if (string.IsNullOrEmpty(characters))
+            return null;
+
+        // Remove brackets and quotes
+        return characters
+            .Replace("[", "")
+            .Replace("]", "")
+            .Replace("'", "")
+            .Replace("\"", "");
     }
 }
 
