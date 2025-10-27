@@ -8,18 +8,15 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add JWT
-var key = Encoding.ASCII.GetBytes("your-32-char-secret-key-here"); // Use secure key in prod
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-  .AddJwtBearer(options =>
-      {
-      options.TokenValidationParameters = new TokenValidationParameters
-      {
-      ValidateIssuerSigningKey = true,
-      IssuerSigningKey = new SymmetricSecurityKey(key),
-      ValidateIssuer = false,
-      ValidateAudience = false
-      };
-      });
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new() {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 
 builder.Services.AddAuthorization();
 // End JWT
@@ -30,6 +27,7 @@ var connectionString = builder.Configuration.GetSection("ConnectionString").Valu
 
 builder.Services.AddDbContext<ImdbContext>(options =>
     options.UseNpgsql(connectionString));
+
 
 Console.WriteLine(connectionString);
 
