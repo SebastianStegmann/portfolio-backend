@@ -9,3 +9,8 @@ GET {{WebServiceLayer_HostAddress}}/api/names/nm7823096
 Accept : application/json
 
 ###
+
+GET {{WebServiceLayer_HostAddress}}/api/titles/tt18361688/allactors
+Accept : application/json
+
+###

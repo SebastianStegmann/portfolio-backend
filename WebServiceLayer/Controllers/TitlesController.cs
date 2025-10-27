@@ -4,6 +4,7 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
 using WebServiceLayer.Models;
 
 namespace WebServiceLayer.Controllers;
@@ -24,7 +25,7 @@ public class TitlesController : BaseController<TitleDataService>
     queryParams.PageSize = Math.Min(queryParams.PageSize, 10);
     var titles = _dataService
         .GetTitles(queryParams.Page, queryParams.PageSize)
-        .Select(x => CreateTitleModel(x));
+        .Select(x => CreateTitleListModel(x));
 
     var numOfItems = _dataService.GetTitlesCount();
 
@@ -44,17 +45,26 @@ public class TitlesController : BaseController<TitleDataService>
     return Ok(model);
   }
 
-  //object-object mapping
-  private TitleModel CreateTitleModel(DataServiceLayer.Models.TitleBasics.TitleBasics title)
-  {
-    var model = _mapper.Map<TitleModel>(title);
-    model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });
-    return model;
-  }
+    // Getting all names known for a specific title - GET: api/titles/{tconst}/allactors
+    [HttpGet("{tconst}/allactors", Name = nameof(GetActorsForTitle))]
+    public IActionResult GetActorsForTitle(string tconst)
+    {
+        var names = _dataService.GetActorsForTitle(tconst);
+        if (names == null || names.Count == 0) return NotFound();
 
+        //Map tp NameLIstModel with URLs
+        var nameModel = names.Select(name => new NameListModel
+        {
+            URL = GetUrl("GetName", new { Nconst = name.Nconst.Trim() }),
+            Name = name.Name,
+            KnownForURL = GetUrl("GetKnownForTitles", new { nconst = name.Nconst.Trim() })
+        });
 
-  // awards endpoint
-  [HttpGet("{tconst}/awards")]
+        return Ok(nameModel);
+    }
+
+    // awards endpoint
+    [HttpGet("{tconst}/awards")]
   public IActionResult GetAwardsByTconst(string tconst)
   {
     var awards = _dataService.GetAwardsByTconst(tconst);
@@ -68,4 +78,39 @@ public class TitlesController : BaseController<TitleDataService>
     var overallRatings = _dataService.GetOverallRatings(tconst);
     return Ok(overallRatings);
   }
+
+    //object-object mapping
+
+    // Information shown when listing all the titles
+    private TitleListModel CreateTitleListModel(DataServiceLayer.Models.TitleBasics.TitleBasics title)
+    {
+        var model = _mapper.Map<TitleListModel>(title);
+        model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });
+
+        // Only generate AllActorURL if the movie has registered actors
+        if (title.Names != null && title.Names.Any())
+        {
+            model.AllActorURL = GetUrl(nameof(GetActorsForTitle), new { tconst = title.Tconst.Trim() });
+        }
+
+        return model;
+    }
+
+    // Information shown when clicking on a specific title
+    private TitleModel CreateTitleModel(DataServiceLayer.Models.TitleBasics.TitleBasics title)
+    {
+        var model = _mapper.Map<TitleModel>(title);
+        model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });
+        
+        if (title.Names != null && title.Names.Any())
+        {
+            model.AllActorURL = GetUrl(nameof(GetActorsForTitle), new { tconst = title.Tconst.Trim() });
+        }
+        else
+        {
+            model.AllActorURL = null;
+        }
+
+        return model;
+    }
 }
