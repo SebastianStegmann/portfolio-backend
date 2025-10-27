@@ -44,14 +44,23 @@ public class TitleDataService : BaseDataService
   }
 
   // Get all actors (names) known for a specific movie
-  public List<NameBasics> GetCastForTitle(string tconst)
+  public List<CastMember> GetCastForTitle(string tconst)
   {
-    return _context.KnownFors
-      .Where(kf => kf.Tconst == tconst)
+    return _context.TitlePrincipals
+      .Where(tp => tp.Tconst == tconst)
       .Join(_context.NameBasics,
-          kf => kf.Nconst,
+          tp => tp.Nconst,
           nb => nb.Nconst,
-          (kf, nb) => nb)
+          (tp, nb) => new CastMember
+          {
+            Nconst = nb.Nconst,
+            Name = nb.Name,
+            Category = tp.Category,
+            Characters = tp.Characters,
+            Job = tp.Job,
+            Ordering = tp.Ordering
+          })
+      .OrderBy(cm => cm.Ordering)
       .ToList();
   }
 
