@@ -44,14 +44,14 @@ public class TitlesController : BaseController<TitleDataService>
     return Ok(model);
   }
 
-    // Getting all names known for a specific title - GET: api/titles/{tconst}/allactors
-    [HttpGet("{tconst}/allactors", Name = nameof(GetActorsForTitle))]
-    public IActionResult GetActorsForTitle(string tconst)
+    // Getting all names known for a specific title - GET: api/titles/{tconst}/allcast
+    [HttpGet("{tconst}/allcast", Name = nameof(GetCastForTitle))]
+    public IActionResult GetCastForTitle(string tconst)
     {
-        var names = _dataService.GetActorsForTitle(tconst);
+        var names = _dataService.GetCastForTitle(tconst);
         if (names == null || names.Count == 0) return NotFound();
 
-        //Map tp NameLIstModel with URLs
+        //Map tp NameListModel with URLs
         var nameModel = names.Select(name => new NameListModel
         {
             URL = GetUrl("GetName", new { Nconst = name.Nconst.Trim() }),
@@ -86,10 +86,10 @@ public class TitlesController : BaseController<TitleDataService>
         var model = _mapper.Map<TitleListModel>(title);
         model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });
 
-        // Only generate AllActorURL if the movie has registered actors
+        // Only generate AllCastURL if the movie has registered actors
         if (title.Names != null && title.Names.Any())
         {
-            model.AllActorURL = GetUrl(nameof(GetActorsForTitle), new { tconst = title.Tconst.Trim() });
+            model.AllCastURL = GetUrl(nameof(GetCastForTitle), new { tconst = title.Tconst.Trim() });
         }
 
         return model;
@@ -103,11 +103,11 @@ public class TitlesController : BaseController<TitleDataService>
         
         if (title.Names != null && title.Names.Any())
         {
-            model.AllActorURL = GetUrl(nameof(GetActorsForTitle), new { tconst = title.Tconst.Trim() });
+            model.AllCastURL = GetUrl(nameof(GetCastForTitle), new { tconst = title.Tconst.Trim() });
         }
         else
         {
-            model.AllActorURL = null;
+            model.AllCastURL = null;
         }
 
         return model;

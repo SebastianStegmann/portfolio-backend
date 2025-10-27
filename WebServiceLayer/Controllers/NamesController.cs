@@ -57,7 +57,7 @@ public class NamesController : BaseController<NameDataService>
             TitleType = title.TitleType,
             ReleaseDate = title.ReleaseDate,
             Poster = title.Poster,
-            AllActorURL = GetUrl("GetActorsForTitle", new { tconst = title.Tconst.Trim() })
+            AllCastURL = GetUrl("GetCastForTitle", new { tconst = title.Tconst.Trim() })
         });
         return Ok(titleListModels);
     }

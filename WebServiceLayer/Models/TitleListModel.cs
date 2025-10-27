@@ -8,6 +8,6 @@
         public string? ReleaseDate { get; set; }
         public short? TotalSeasons { get; set; }
         public string? Poster { get; set; }
-        public string? AllActorURL { get; set; }
+        public string? AllCastURL { get; set; }
     }
 }
