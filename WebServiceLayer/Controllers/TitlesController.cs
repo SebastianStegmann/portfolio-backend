@@ -1,4 +1,5 @@
 using DataServiceLayer;
+using DataServiceLayer.Models;
 using DataServiceLayer.Models.Title;
 using Mapster;
 using MapsterMapper;
@@ -48,18 +49,24 @@ public class TitlesController : BaseController<TitleDataService>
     [HttpGet("{tconst}/allcast", Name = nameof(GetCastForTitle))]
     public IActionResult GetCastForTitle(string tconst)
     {
-        var names = _dataService.GetCastForTitle(tconst);
-        if (names == null || names.Count == 0) return NotFound();
+        var cast = _dataService.GetCastForTitle(tconst);
+        if (cast == null || cast.Count == 0) return NotFound();
 
         //Map tp NameListModel with URLs
-        var nameModel = names.Select(name => new NameListModel
+        var castModel = cast.Select(castName => new NameListModel
         {
-            URL = GetUrl("GetName", new { Nconst = name.Nconst.Trim() }),
-            Name = name.Name,
-            KnownForURL = GetUrl("GetKnownForTitles", new { nconst = name.Nconst.Trim() })
+            URL = GetUrl("GetName", new { Nconst = castName.Nconst.Trim() }),
+            Name = castName.Name,
+            Category = castName.Category,
+            Characters = castName.Characters,
+            Job = castName.Job,
+            // Only generate KnownForURL if the actor has known for titles
+            KnownForURL = _dataService.HasKnownForTitles(castName.Nconst.Trim())
+            ? GetUrl("GetKnownForTitles", new { nconst = castName.Nconst.Trim() })
+            : null
         });
 
-        return Ok(nameModel);
+        return Ok(castModel);
     }
 
     // awards endpoint
@@ -88,11 +95,11 @@ public class TitlesController : BaseController<TitleDataService>
 
         // Only generate AllCastURL if the movie has registered actors
         if (title.Names != null && title.Names.Any())
-        {
+        { 
             model.AllCastURL = GetUrl(nameof(GetCastForTitle), new { tconst = title.Tconst.Trim() });
         }
 
-        return model;
+            return model;
     }
 
     // Information shown when clicking on a specific title
@@ -100,10 +107,10 @@ public class TitlesController : BaseController<TitleDataService>
     {
         var model = _mapper.Map<TitleModel>(title);
         model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });
-        
+
         if (title.Names != null && title.Names.Any())
         {
-            model.AllCastURL = GetUrl(nameof(GetCastForTitle), new { tconst = title.Tconst.Trim() });
+        model.AllCastURL = GetUrl(nameof(GetCastForTitle), new { tconst = title.Tconst.Trim() });
         }
         else
         {
