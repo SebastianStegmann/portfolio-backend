@@ -178,7 +178,7 @@ public class ImdbContext : DbContext
         // Configure the many-to-many relationship between NameBasics and TitleBasics
         modelBuilder.Entity<NameBasics>()
             .HasMany(n => n.Titles)
-            .WithMany()
+            .WithMany(t => t.Names)
             .UsingEntity<KnownFor>(
                 j => j.HasOne<DataServiceLayer.Models.TitleBasics.TitleBasics>()
                       .WithMany()

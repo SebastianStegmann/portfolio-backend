@@ -16,4 +16,7 @@ public class TitleBasics
     public string? Poster { get; set; }
     public string? Country { get; set; }
     public int? RuntimeMinutes { get; set; }
+
+    public ICollection<NameBasicsModel> Names { get; set; } = new List<NameBasicsModel>();
+
 }
