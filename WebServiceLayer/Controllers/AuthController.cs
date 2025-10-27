@@ -31,7 +31,7 @@ public class AuthController : ControllerBase
 
   [HttpPost("login")]
   public async Task<IActionResult> Login([FromBody] LoginModel model) {
-    var person = await _context.Person.FirstOrDefaultAsync(p => p.Email == model.Email);
+    var person = await _context.Persons.FirstOrDefaultAsync(p => p.Email == model.Email);
     if (person != null && VerifyPassword(model.Password, person.Password)) {
       var token = GenerateJwtToken(person.Id.ToString());
       return Ok(new { Token = token });
@@ -41,10 +41,10 @@ public class AuthController : ControllerBase
 
   [HttpPost("register")]
   public async Task<IActionResult> Register([FromBody] RegisterModel model) {
-    var existing = await _context.Person.FirstOrDefaultAsync(p => p.Email == model.Email);
+    var existing = await _context.Persons.FirstOrDefaultAsync(p => p.Email == model.Email);
     if (existing != null) return BadRequest("User exists");
     var person = new Person { Email = model.Email, Password = HashPassword(model.Password), Name = model.Email, CreatedAt = DateTime.UtcNow };
-    _context.Person.Add(person);
+    _context.Persons.Add(person);
     await _context.SaveChangesAsync();
     return Ok();
   }

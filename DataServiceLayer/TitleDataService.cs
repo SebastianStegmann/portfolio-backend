@@ -36,7 +36,7 @@ public class TitleDataService : BaseDataService
 
   public List<Genre> GetAllGenres()
   {
-    return _context.Genre.ToList();
+    return _context.Genres.ToList();
   }
 
   // awards 

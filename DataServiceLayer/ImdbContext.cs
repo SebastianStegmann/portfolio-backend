@@ -14,8 +14,8 @@ public class ImdbContext : DbContext
     public DbSet<TitleEpisode> TitleEpisodes { get; set; }
     public DbSet<TitleGenre> TitleGenres { get; set; }
     public DbSet<TitlePrincipal> TitlePrincipals { get; set; }
-    public DbSet<TitleAka> TitleAka { get; set; }
-    public DbSet<Genre> Genre { get; set; }
+    public DbSet<TitleAka> TitleAkas { get; set; }
+    public DbSet<Genre> Genres { get; set; }
     public DbSet<Award> Awards { get; set; }
     public DbSet<OverallRating> OverallRatings { get; set; }
 
@@ -29,7 +29,7 @@ public class ImdbContext : DbContext
 
 
     // Person
-    public DbSet<Person> Person { get; set; }
+    public DbSet<Person> Persons { get; set; }
     public DbSet<SearchHistory> SearchHistories { get; set; }
     public DbSet<Bookmark> Bookmarks { get; set; }
     public DbSet<IndividualRating> IndividualRatings { get; set; }

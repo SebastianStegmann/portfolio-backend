@@ -10,12 +10,12 @@ public class PersonDataService : BaseDataService
     // person
     public List<Person> GetPerson()
     {
-        return _context.Person.ToList();
+        return _context.Persons.ToList();
     }
 
     public Person? GetPerson(int Id)
     {
-        return _context.Person.Find(Id);
+        return _context.Persons.Find(Id);
     }
 
     // search history
@@ -47,7 +47,7 @@ public class PersonDataService : BaseDataService
 
     public async Task AddPersonAsync(Person person)
     {
-        _context.Person.Add(person);
+        _context.Persons.Add(person);
         await _context.SaveChangesAsync();
     }
 }
