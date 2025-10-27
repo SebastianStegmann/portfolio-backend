@@ -93,6 +93,7 @@ public class ImdbContext : DbContext
         modelBuilder.Entity<TitlePrincipal>().ToTable("title_principals");
         modelBuilder.Entity<TitlePrincipal>(entity =>
         {
+            entity.HasKey(e => new { e.Tconst, e.Ordering });
             entity.Property(e => e.Tconst).HasColumnName("tconst");
             entity.Property(e => e.Ordering).HasColumnName("ordering");
             entity.Property(e => e.Nconst).HasColumnName("nconst");
