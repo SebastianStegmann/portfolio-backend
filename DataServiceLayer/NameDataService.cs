@@ -63,17 +63,17 @@ public class NameDataService : BaseDataService
       .ToList();
   }
 
-  // All people with a specific profession
-  public List<NameBasics> GetNamesByProfession(int professionId)  // Changed parameter type to int
-  {
-    return _context.NameProfessions
-      .Where(np => np.ProfessionId == professionId)
-      .Join(_context.NameBasics,
-          np => np.Nconst,
-          nb => nb.Nconst,
-          (np, nb) => nb)
-      .ToList();
-  }
+    // All people with a specific profession
+    public List<NameBasics> GetNamesByProfession(int professionId)  // Changed parameter type to int
+    {
+        return _context.NameProfessions
+          .Where(np => np.ProfessionId == professionId)
+          .Join(_context.NameBasics,
+              np => np.Nconst,
+              nb => nb.Nconst,
+              (np, nb) => nb)
+          .ToList();
+    }
 
   // All people known for a specific movie
   public List<NameBasics> GetNamesKnownForTitle(string tconst)

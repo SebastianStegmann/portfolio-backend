@@ -1,4 +1,5 @@
 ﻿using DataServiceLayer;
+using DataServiceLayer.Models.TitleBasics;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -50,16 +51,16 @@ public class NamesController : BaseController<NameDataService>
         if (titles == null || titles.Count == 0) return NotFound();
 
         // Map to TitleModel with URLs
-        var titleModels = titles.Select(title => new TitleModel
+        var titleListModels = titles.Select(title => new TitleListModel
         {
             URL = GetUrl("GetTitle", new { Tconst = title.Tconst.Trim() }),
             PrimaryTitle = title.PrimaryTitle,
             TitleType = title.TitleType,
             ReleaseDate = title.ReleaseDate,
-            RuntimeMinutes = title.RuntimeMinutes,
-            Poster = title.Poster
+            Poster = title.Poster,
+            AllActorURL = GetUrl("GetActorsForTitle", new { tconst = title.Tconst.Trim() })
         });
-        return Ok(titleModels);
+        return Ok(titleListModels);
     }
 
     // Getting the professions for one actor - GET: api/names/{nconst}/professions
