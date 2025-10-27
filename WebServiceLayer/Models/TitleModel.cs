@@ -14,5 +14,6 @@
         public string? Poster { get; set; }
         public string? Country { get; set; }
         public int? RuntimeMinutes { get; set; }
+        public string? AllActorURL { get; set; }
     }
 }
