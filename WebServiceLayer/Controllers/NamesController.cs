@@ -19,7 +19,6 @@ public class NamesController : BaseController<NameDataService>
     [HttpGet(Name = nameof(GetNames))]
     public IActionResult GetNames([FromQuery] QueryParams queryParams)
     {
-        queryParams.PageSize = Math.Min(queryParams.PageSize, 10);
         var names = _dataService
             .GetNames(queryParams.Page, queryParams.PageSize)
             .Select(x => CreateNameListModel(x));

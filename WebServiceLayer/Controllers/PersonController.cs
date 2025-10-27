@@ -33,6 +33,7 @@ public class PersonController : ControllerBase
         return Ok(searchHistory);
     }
 
+    [Authorize]
     // Get bookmark from a specific person
     [HttpGet("{personId}/bookmarks")]
     public IActionResult GetPersonBookmarks(int personId)
@@ -41,6 +42,7 @@ public class PersonController : ControllerBase
         return Ok(bookmarks);
     }
 
+    [Authorize]
     // Get ratings for a specific person
     [HttpGet("{personId}/ratings")]
     public IActionResult GetPersonRatings(int personId)
