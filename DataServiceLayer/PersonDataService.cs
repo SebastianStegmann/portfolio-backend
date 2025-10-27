@@ -44,5 +44,11 @@ public class PersonDataService : BaseDataService
     {
         return _context.IndividualRatings.Where(r => r.PersonId == personId).ToList();
     }
+
+    public async Task AddPersonAsync(Person person)
+    {
+        _context.Person.Add(person);
+        await _context.SaveChangesAsync();
+    }
 }
 

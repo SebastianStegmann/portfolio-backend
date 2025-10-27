@@ -1,5 +1,5 @@
 using DataServiceLayer;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebServiceLayer;
@@ -25,6 +25,7 @@ public class PersonController : ControllerBase
     }
 
     // Get search history for a specific person
+    [Authorize]
     [HttpGet("{personId}/searchhistory")]
     public IActionResult GetPersonSearchHistory(int personId)
     {
