@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace DataServiceLayer;
@@ -23,7 +24,7 @@ public class TitleDataService : BaseDataService
   public List<TitleBasics> GetTitles(int page, int pageSize)
   {
     return _context.TitleBasics
-        /*.Include(x => x.)*/
+        .Include(x => x.Names)
         .OrderBy(x => x.Tconst)
         .Skip(page * pageSize)
         .Take(pageSize)
@@ -32,8 +33,10 @@ public class TitleDataService : BaseDataService
 
   public TitleBasics? GetTitle(string tconst)
   {
-    return _context.TitleBasics.Find(tconst);
-  }
+    return _context.TitleBasics
+            .Include(t => t.Names)
+            .FirstOrDefault(t => t.Tconst == tconst);
+    }
 
   public List<Genre> GetAllGenres()
   {
