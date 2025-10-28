@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
 using WebServiceLayer.Models;
+using WebServiceLayer.Models.DTO;
 
 namespace WebServiceLayer.Controllers;
 
@@ -34,7 +35,7 @@ public class TitlesController : BaseController<TitleDataService>
     return Ok(result);
   }
 
-  // Getting one title by tconst - GET: api/names/{tconst}
+  // Getting one title by tconst - GET: api/titles/{tconst}
   [HttpGet("{tconst}", Name = nameof(GetTitle))]
   public IActionResult GetTitle(string tconst)
   {
@@ -44,6 +45,67 @@ public class TitlesController : BaseController<TitleDataService>
 
     return Ok(model);
   }
+
+    // Getting the genres for the title - GET: api/titles/{tconst}/genres
+    [HttpGet("{tconst}/genres", Name = nameof(GetGenresForTitle))]
+    public IActionResult GetGenresForTitle(string tconst)
+    {
+        var title = _dataService.GetTitle(tconst);
+        if (title == null) return NotFound();
+
+        var genres = title.Genre
+            .Where(tg => tg.Genre != null)
+            .Select(tg => new GenreDTO
+            {
+                GenreName = tg.Genre!.GenreName
+            })
+            .ToList();
+
+        if (genres.Count == 0) return NotFound();
+        return Ok(genres);
+    }
+
+    // Getting the alternate titles for the movie - GET: api/titles/{tconst}/akas
+    [HttpGet("{tconst}/akas", Name = nameof(GetAkasForTitle))]
+    public IActionResult GetAkasForTitle(string tconst)
+    {
+        var title = _dataService.GetTitle(tconst);
+        if (title == null) return NotFound();
+
+        var akas = title.Aka
+            .Select(aka => new AkaDTO
+            {
+                Title = aka.Title,
+                Region = aka.Region,
+                Language = aka.Language
+            })
+            .ToList();
+
+        if (akas.Count == 0) return NotFound();
+        return Ok(akas);
+    }
+
+    // Getting the episodes for series - GET: api/titles/{tconst}/episodes
+    [HttpGet("{tconst}/episodes", Name = nameof(GetEpisodesForTitle))]
+    public IActionResult GetEpisodesForTitle(string tconst)
+    {
+        var title = _dataService.GetTitle(tconst);
+        if (title == null) return NotFound();
+
+        var episodes = title.Episodes
+            .Select(ep => new EpisodeDTO
+            {
+                URL = GetUrl("GetTitle", new { Tconst = ep.Tconst.Trim() }),
+                PrimaryTitle = ep.PrimaryTitle,
+                SeasonNumber = ep.SeasonNumber,
+                EpisodeNumber = ep.EpisodeNumber,
+                ReleaseDate = ep.ReleaseDate
+            })
+            .ToList();
+
+        if (episodes.Count == 0) return NotFound();
+        return Ok(episodes);
+    }
 
     // Getting all names known for a specific title - GET: api/titles/{tconst}/allcast
     [HttpGet("{tconst}/allcast", Name = nameof(GetCastForTitle))]
@@ -115,6 +177,24 @@ public class TitlesController : BaseController<TitleDataService>
         else
         {
             model.AllCastURL = null;
+        }
+
+        // Generate GenresURL if genres exist
+        if (title.Genre != null && title.Genre.Any())
+        {
+            model.GenresURL = GetUrl(nameof(GetGenresForTitle), new { tconst = title.Tconst.Trim() });
+        }
+
+        // Generate AlternateTitlesURL if alternate titles exist
+        if (title.Aka != null && title.Aka.Any())
+        {
+            model.AkaURL = GetUrl(nameof(GetAkasForTitle), new { tconst = title.Tconst.Trim() });
+        }
+
+        // Generate EpisodesURL if episodes exist
+        if (title.Episodes != null && title.Episodes.Any())
+        {
+            model.EpisodesURL = GetUrl(nameof(GetEpisodesForTitle), new { tconst = title.Tconst.Trim() });
         }
 
         return model;
