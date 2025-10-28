@@ -1,4 +1,5 @@
 ﻿using DataServiceLayer.Models.Title;
+using WebServiceLayer.Models.DTO;
 
 namespace WebServiceLayer.Models
 {

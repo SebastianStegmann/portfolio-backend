@@ -170,9 +170,40 @@ public class TitlesController : BaseController<TitleDataService>
         var model = _mapper.Map<TitleModel>(title);
         model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });
 
+        // mapping of genres to only show genre names
+        model.Genres = title.Genre
+            .Where(tg => tg.Genre != null)
+            .Select(tg => new GenreDTO
+            {
+                GenreName = tg.Genre!.GenreName
+            })
+            .ToList();
+
+        // mapping of aka for a simplified view
+        model.Akas = title.Aka
+        .Select(aka => new AkaDTO
+        {
+            Title = aka.Title,
+            Region = aka.Region,
+            Language = aka.Language
+        })
+        .ToList();
+
+        // mapping of episodes for a simplified view
+        model.Episodes = title.Episodes
+        .Select(ep => new EpisodeDTO
+        {
+            URL = GetUrl("GetTitle", new { Tconst = ep.Tconst.Trim() }),
+            PrimaryTitle = ep.PrimaryTitle,
+            SeasonNumber = ep.SeasonNumber,
+            EpisodeNumber = ep.EpisodeNumber,
+            ReleaseDate = ep.ReleaseDate
+        })
+        .ToList();
+
         if (title.Names != null && title.Names.Any())
         {
-        model.AllCastURL = GetUrl(nameof(GetCastForTitle), new { tconst = title.Tconst.Trim() });
+            model.AllCastURL = GetUrl(nameof(GetCastForTitle), new { tconst = title.Tconst.Trim() });
         }
         else
         {
