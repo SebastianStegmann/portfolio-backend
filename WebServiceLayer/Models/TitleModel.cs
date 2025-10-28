@@ -18,9 +18,9 @@ namespace WebServiceLayer.Models
         public int? RuntimeMinutes { get; set; }
         public string? AllCastURL { get; set; }
 
-        public ICollection<TitleGenre> Genre { get; set; } = new List<TitleGenre>();
-        public ICollection<TitleAka> Aka { get; set; } = new List<TitleAka>();
-        public ICollection<TitleEpisode> Episodes { get; set; } = new List<TitleEpisode>();
+        public string? GenresURL { get; set; }
+        public string? AkaURL { get; set; }
+        public string? EpisodesURL { get; set; }
 
     }
 }
