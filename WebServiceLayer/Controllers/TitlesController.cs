@@ -101,6 +101,8 @@ public class TitlesController : BaseController<TitleDataService>
                 EpisodeNumber = ep.EpisodeNumber,
                 ReleaseDate = ep.ReleaseDate
             })
+            .OrderBy(ep => ep.SeasonNumber)
+            .ThenBy(ep => ep.EpisodeNumber)
             .ToList();
 
         if (episodes.Count == 0) return NotFound();
