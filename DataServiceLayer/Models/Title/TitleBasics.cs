@@ -18,5 +18,7 @@ public class TitleBasics
     public int? RuntimeMinutes { get; set; }
 
     public ICollection<NameBasicsModel> Names { get; set; } = new List<NameBasicsModel>();
-
+    public ICollection<TitleGenre> Genre { get; set; } = new List<TitleGenre>();
+    public ICollection<TitleAka> Aka { get; set; } = new List<TitleAka>();
+    public ICollection<TitleEpisode> Episodes { get; set; } = new List<TitleEpisode>();
 }

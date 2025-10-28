@@ -1,4 +1,6 @@
-﻿namespace WebServiceLayer.Models
+﻿using DataServiceLayer.Models.Title;
+
+namespace WebServiceLayer.Models
 {
     public class TitleModel
     {
@@ -15,5 +17,10 @@
         public string? Country { get; set; }
         public int? RuntimeMinutes { get; set; }
         public string? AllCastURL { get; set; }
+
+        public ICollection<TitleGenre> Genre { get; set; } = new List<TitleGenre>();
+        public ICollection<TitleAka> Aka { get; set; } = new List<TitleAka>();
+        public ICollection<TitleEpisode> Episodes { get; set; } = new List<TitleEpisode>();
+
     }
 }

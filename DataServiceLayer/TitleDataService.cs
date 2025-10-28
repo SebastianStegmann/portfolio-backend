@@ -25,6 +25,9 @@ public class TitleDataService : BaseDataService
   {
     return _context.TitleBasics
         .Include(x => x.Names)
+        .Include(x => x.Genre)
+        .Include(x => x.Aka)
+        .Include(x => x.Episodes)
         .OrderBy(x => x.Tconst)
         .Skip(page * pageSize)
         .Take(pageSize)
@@ -35,6 +38,9 @@ public class TitleDataService : BaseDataService
   {
     return _context.TitleBasics
             .Include(t => t.Names)
+            .Include(t => t.Genre)
+            .Include(t => t.Aka)
+            .Include(t => t.Episodes)
             .FirstOrDefault(t => t.Tconst == tconst);
     }
 

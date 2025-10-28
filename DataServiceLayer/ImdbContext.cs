@@ -141,6 +141,22 @@ public class ImdbContext : DbContext
             entity.Property(e => e.Votes).HasColumnName("votes");
         });
 
+        // TitleBasics Relationships with Genre, Aka and Episodes
+        modelBuilder.Entity<TitleBasics>()
+            .HasMany(t => t.Genre)
+            .WithOne()
+            .HasForeignKey(tg => tg.Tconst);
+
+        modelBuilder.Entity<TitleBasics>()
+            .HasMany(t => t.Aka)
+            .WithOne()
+            .HasForeignKey(ta => ta.Tconst);
+
+        modelBuilder.Entity<TitleBasics>()
+            .HasMany(t => t.Episodes)
+            .WithOne()
+            .HasForeignKey(te => te.ParentTconst);
+
         //Name
         modelBuilder.Entity<NameBasics>().ToTable("name_basics");
         modelBuilder.Entity<NameBasics>(entity =>
