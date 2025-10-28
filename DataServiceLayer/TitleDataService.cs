@@ -24,10 +24,8 @@ public class TitleDataService : BaseDataService
   public List<TitleBasics> GetTitles(int page, int pageSize)
   {
     return _context.TitleBasics
-        .Include(x => x.Names)
         .Include(x => x.Genre)
-        .Include(x => x.Aka)
-        .Include(x => x.Episodes)
+            .ThenInclude(tg => tg.Genre)  // Only load genres for the list
         .OrderBy(x => x.Tconst)
         .Skip(page * pageSize)
         .Take(pageSize)
@@ -37,8 +35,10 @@ public class TitleDataService : BaseDataService
   public TitleBasics? GetTitle(string tconst)
   {
     return _context.TitleBasics
+            .AsSplitQuery()  // Splits into multiple queries
             .Include(t => t.Names)
             .Include(t => t.Genre)
+            .ThenInclude(tg => tg.Genre)
             .Include(t => t.Aka)
             .Include(t => t.Episodes)
             .FirstOrDefault(t => t.Tconst == tconst);
