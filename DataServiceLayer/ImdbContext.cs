@@ -88,6 +88,11 @@ public class ImdbContext : DbContext
             entity.HasKey(e => new { e.Tconst, e.GenreId });
             entity.Property(e => e.Tconst).HasColumnName("tconst");
             entity.Property(e => e.GenreId).HasColumnName("genre_id");
+
+            // Relationship config to Genre-table
+            entity.HasOne(tg => tg.Genre)
+                .WithMany()
+                .HasForeignKey(tg => tg.GenreId);
         });
 
         modelBuilder.Entity<TitlePrincipal>().ToTable("title_principals");
