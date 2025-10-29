@@ -135,19 +135,27 @@ public class TitlesController : BaseController<TitleDataService>
 
     // awards endpoint
     [HttpGet("{tconst}/awards")]
-  public IActionResult GetAwardsByTconst(string tconst)
-  {
-    var awards = _dataService.GetAwardsByTconst(tconst);
-    return Ok(awards);
-  }
+    public IActionResult GetAwardsByTitle(string tconst)
+    {
+        var awards = _dataService.GetAwardsByTitle(tconst);
+        return Ok(awards);
+    }
 
-  // overall rating endpoint
-  [HttpGet("{tconst}/overallrating")]
-  public IActionResult GetOverallRatings(string tconst)
-  {
-    var overallRatings = _dataService.GetOverallRatings(tconst);
-    return Ok(overallRatings);
-  }
+    // Getting information on overall rating for a specific title - GET: api/titles/{tconst}/overallrating
+    [HttpGet("{tconst}/overallrating", Name = nameof(GetOverallRatings))]
+    public IActionResult GetOverallRatings(string tconst)
+    {
+        var overallRating = _dataService.GetOverallRatings(tconst);
+        if (overallRating == null) return NotFound();
+
+        var ratings = new RatingDTO
+        {
+            Rating = overallRating.Rating.ToString("N0"),  // Format with thousand separators
+            Votes = overallRating.Votes.ToString("N0")  // Format with thousand separators
+        };
+
+        return Ok(ratings);
+    }
 
     //object-object mapping
 
@@ -197,6 +205,16 @@ public class TitlesController : BaseController<TitleDataService>
         if (title.Episodes != null && title.Episodes.Any())
         {
             model.EpisodesURL = GetUrl(nameof(GetEpisodesForTitle), new { tconst = title.Tconst.Trim() });
+        }
+
+        // Map OverallRating as a nested object (if it exists)
+        if (title.OverallRating != null)
+        {
+            model.OverallRating = new RatingDTO
+            {
+                Rating = title.OverallRating.Rating.ToString("N0"), // Format with thousand separators
+                Votes = title.OverallRating.Votes.ToString("N0")  // Format with thousand separators
+            };
         }
 
         return model;
