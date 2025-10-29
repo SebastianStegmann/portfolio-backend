@@ -1,19 +1,20 @@
 using DataServiceLayer.Models;
 using DataServiceLayer.Models.Name;
 using DataServiceLayer.Models.Person;
+using Microsoft.EntityFrameworkCore;
 namespace DataServiceLayer;
 
 public class PersonDataService : BaseDataService
 {
     public PersonDataService(ImdbContext context) : base(context) { }
 
-
-    // person
-    public List<Person> GetPerson()
+    // Get all persons (for development/admin)
+    public List<Person> GetAllPersons()
     {
         return _context.Persons.ToList();
     }
 
+    // Get a single person by ID
     public Person? GetPerson(int Id)
     {
         return _context.Persons.Find(Id);
@@ -29,6 +30,7 @@ public class PersonDataService : BaseDataService
     {
         return _context.SearchHistories.Find(id);
     }
+
     public List<SearchHistory> GetSearchHistoriesByPersonId(int personId)
     {
         return _context.SearchHistories.Where(sh => sh.PersonId == personId).ToList();
