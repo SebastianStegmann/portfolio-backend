@@ -62,7 +62,7 @@ public class PersonController : BaseController<PersonDataService>
         var person = _dataService.GetPerson(id);
         if (person == null) return NotFound();
         PersonModel model = CreatePersonModel(person);
-        return Ok(person);
+        return Ok(model);
     }
 
     // Get search history for the logged-in person
