@@ -35,12 +35,13 @@ public class TitleDataService : BaseDataService
   public TitleBasics? GetTitle(string tconst)
   {
     return _context.TitleBasics
-            .AsSplitQuery()  // Splits into multiple queries
             .Include(t => t.Names)
             .Include(t => t.Genre)
             .ThenInclude(tg => tg.Genre)
             .Include(t => t.Aka)
             .Include(t => t.Episodes)
+            .Include(t => t.OverallRating)
+            .Include(t => t.Award)
             .FirstOrDefault(t => t.Tconst == tconst);
     }
 
@@ -70,17 +71,17 @@ public class TitleDataService : BaseDataService
       .ToList();
   }
 
-  // awards 
-  public List<Award> GetAwardsByTconst(string tconst)
-  {
-    return _context.Awards.Where(a => a.Tconst == tconst).ToList();
-  }
+    // Get award for a specific title
+    public Award? GetAwardsByTitle(string tconst)
+    {
+        return _context.Awards.FirstOrDefault(a => a.Tconst == tconst);
+    }
 
-  // overall rating
-  public List<OverallRating> GetOverallRatings(string tconst)
-  {
-    return _context.OverallRatings.Where(a => a.Tconst == tconst).ToList();
-  }
+    // Get overall rating for a specific title
+    public OverallRating? GetOverallRatings(string tconst)
+    {
+        return _context.OverallRatings.FirstOrDefault(a => a.Tconst == tconst);
+    }
 
 
     // Helpers
