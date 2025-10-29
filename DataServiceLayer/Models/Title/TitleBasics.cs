@@ -21,4 +21,8 @@ public class TitleBasics
     public ICollection<TitleGenre> Genre { get; set; } = new List<TitleGenre>();
     public ICollection<TitleAka> Aka { get; set; } = new List<TitleAka>();
     public ICollection<TitleEpisode> Episodes { get; set; } = new List<TitleEpisode>();
+    public OverallRating? OverallRating { get; set; }
+    public Award? Award { get; set; }
+
+
 }

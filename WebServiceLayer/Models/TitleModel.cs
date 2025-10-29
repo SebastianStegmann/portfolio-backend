@@ -22,6 +22,8 @@ namespace WebServiceLayer.Models
         public string? GenresURL { get; set; }
         public string? AkaURL { get; set; }
         public string? EpisodesURL { get; set; }
+        public RatingDTO? OverallRating { get; set; }
+        public string? Awards {  get; set; }
 
     }
 }
