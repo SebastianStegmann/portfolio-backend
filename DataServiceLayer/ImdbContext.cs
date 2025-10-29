@@ -146,21 +146,39 @@ public class ImdbContext : DbContext
             entity.Property(e => e.Votes).HasColumnName("votes");
         });
 
-        // TitleBasics Relationships with Genre, Aka and Episodes
+        // TitleBasics Relationships with Genre
         modelBuilder.Entity<TitleBasics>()
             .HasMany(t => t.Genre)
             .WithOne()
             .HasForeignKey(tg => tg.Tconst);
 
+        // TitleBasics Relationships with Aka
         modelBuilder.Entity<TitleBasics>()
             .HasMany(t => t.Aka)
             .WithOne()
             .HasForeignKey(ta => ta.Tconst);
 
+        // TitleBasics Relationships with Episodes
         modelBuilder.Entity<TitleBasics>()
             .HasMany(t => t.Episodes)
             .WithOne()
             .HasForeignKey(te => te.ParentTconst);
+
+        // TitleBasics Relationships with OverallRating (ONE-TO-ONE)
+        modelBuilder.Entity<TitleBasics>()
+            .HasOne(t => t.OverallRating)
+            .WithOne()
+            .HasForeignKey<OverallRating>(or => or.Tconst)
+            .HasPrincipalKey<TitleBasics>(t => t.Tconst)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // TitleBasics Relationships with Award (ONE-TO-ONE)
+        modelBuilder.Entity<TitleBasics>()
+            .HasOne(t => t.Award)
+            .WithOne()
+            .HasForeignKey<Award>(a => a.Tconst)
+            .HasPrincipalKey<TitleBasics>(t => t.Tconst)
+            .OnDelete(DeleteBehavior.Cascade);
 
         //Name
         modelBuilder.Entity<NameBasics>().ToTable("name_basics");
@@ -273,25 +291,6 @@ public class ImdbContext : DbContext
             entity.Property(e => e.RatingValue).HasColumnName("rating");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
-        });
-
-        // awards
-        modelBuilder.Entity<Award>().ToTable("award");
-        modelBuilder.Entity<Award>(entity =>
-        {
-            entity.HasKey(e => e.Tconst);
-            entity.Property(e => e.Tconst).HasColumnName("tconst");
-            entity.Property(e => e.AwardInfo).HasColumnName("award_info");
-        });
-
-        // overall rating
-        modelBuilder.Entity<OverallRating>().ToTable("overall_rating");
-        modelBuilder.Entity<OverallRating>(entity =>
-        {
-            entity.HasKey(e => e.Tconst);
-            entity.Property(e => e.Tconst).HasColumnName("tconst");
-            entity.Property(e => e.Rating).HasColumnName("rating");
-            entity.Property(e => e.Votes).HasColumnName("votes");
         });
     }
 }
