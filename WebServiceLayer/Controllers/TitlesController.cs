@@ -134,7 +134,7 @@ public class TitlesController : BaseController<TitleDataService>
     }
 
     // awards endpoint
-    [HttpGet("{tconst}/awards")]
+    [HttpGet("{tconst}/awards", Name = nameof(GetAwardsByTitle))]
     public IActionResult GetAwardsByTitle(string tconst)
     {
         var awards = _dataService.GetAwardsByTitle(tconst);
@@ -215,6 +215,12 @@ public class TitlesController : BaseController<TitleDataService>
                 Rating = title.OverallRating.Rating.ToString("N0"), // Format with thousand separators
                 Votes = title.OverallRating.Votes.ToString("N0")  // Format with thousand separators
             };
+        }
+
+        // Map Award information (if it exists)
+        if (title.Award != null)
+        {
+            model.Awards = title.Award.AwardInfo;
         }
 
         return model;
