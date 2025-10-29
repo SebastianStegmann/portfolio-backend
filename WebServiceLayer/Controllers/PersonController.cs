@@ -1,53 +1,115 @@
 using DataServiceLayer;
+using DataServiceLayer.Models.Title;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Xml.Linq;
+using WebServiceLayer.Models;
 
-namespace WebServiceLayer;
+namespace WebServiceLayer.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PersonController : ControllerBase
+public class PersonController : BaseController<PersonDataService>
 {
-    private readonly PersonDataService _personDataService;
+    private const bool USE_DEV_MODE = true; // Set to false for production
 
-    public PersonController(PersonDataService personDataService)
+    public PersonController(
+        PersonDataService dataService,
+        LinkGenerator generator,
+        IMapper mapper) : base(dataService, generator, mapper) { }
+
+    private int? GetCurrentUserId()
     {
-        _personDataService = personDataService;
+        // PRODUCTION MODE: Get user ID from JWT token
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+        {
+            return userId;
+        }
+
+        return null;
     }
 
-    // Get person by ID
-    [HttpGet("{id}")]
+    // Get logged-in person's information OR all persons in dev mode - GET: api/person
+    [HttpGet(Name = nameof(GetLoggedInPerson))]
+    public IActionResult GetLoggedInPerson()
+    {
+        // DEVELOPMENT MODE: Return all persons
+        if (USE_DEV_MODE)
+        {
+            var allPersons = _dataService.GetAllPersons();
+            var models = allPersons.Select(p => CreatePersonListModel(p)).ToList();
+            return Ok(models);
+        }
+
+        // PRODUCTION MODE: Return only the logged-in user's info
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var person = _dataService.GetPerson(userId.Value);
+        if (person == null) return NotFound();
+
+        var model = CreatePersonListModel(person);
+        return Ok(model);
+    }
+
+    // Get person by ID (admin) - GET: api/person/{id}
+    [HttpGet("{id}", Name = nameof(GetPerson))]
     public IActionResult GetPerson(int id)
     {
-        var person = _personDataService.GetPerson(id);
+        var person = _dataService.GetPerson(id);
         if (person == null) return NotFound();
+        PersonModel model = CreatePersonModel(person);
         return Ok(person);
     }
 
-    // Get search history for a specific person
-    [Authorize]
-    [HttpGet("{personId}/searchhistory")]
-    public IActionResult GetPersonSearchHistory(int personId)
+    // Get search history for the logged-in person
+    [HttpGet("searchhistory")]
+    public IActionResult GetPersonSearchHistory()
     {
-        var searchHistory = _personDataService.GetSearchHistoriesByPersonId(personId);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var searchHistory = _dataService.GetSearchHistoriesByPersonId(userId.Value);
         return Ok(searchHistory);
     }
 
-    [Authorize]
-    // Get bookmark from a specific person
-    [HttpGet("{personId}/bookmarks")]
-    public IActionResult GetPersonBookmarks(int personId)
+    // Get bookmarks for the logged-in person
+    [HttpGet("bookmarks")]
+    public IActionResult GetPersonBookmarks()
     {
-        var bookmarks = _personDataService.GetBookmarksByPersonId(personId);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var bookmarks = _dataService.GetBookmarksByPersonId(userId.Value);
         return Ok(bookmarks);
     }
 
-    [Authorize]
-    // Get ratings for a specific person
-    [HttpGet("{personId}/ratings")]
-    public IActionResult GetPersonRatings(int personId)
+    // Get ratings for the logged-in person
+    [HttpGet("ratings")]
+    public IActionResult GetPersonRatings()
     {
-        var ratings = _personDataService.GetRatingsByPersonId(personId);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var ratings = _dataService.GetRatingsByPersonId(userId.Value);
         return Ok(ratings);
+    }
+    private PersonListModel CreatePersonListModel(DataServiceLayer.Models.Person.Person person)
+    {
+        var model = _mapper.Map<PersonListModel>(person);
+        model.URL = GetUrl(nameof(GetPerson), new { id = person.Id });
+
+        return model;
+    }
+
+    private PersonModel CreatePersonModel(DataServiceLayer.Models.Person.Person person)
+    {
+        var model = _mapper.Map<PersonModel>(person);
+        model.URL = GetUrl(nameof(GetPerson), new { id = person.Id });
+
+        return model;
     }
 }
