@@ -24,6 +24,7 @@ public class TitleDataService : BaseDataService
   public List<TitleBasics> GetTitles(int page, int pageSize)
   {
     return _context.TitleBasics
+        .Include(t => t.Names)
         .OrderBy(x => x.Tconst)
         .Skip(page * pageSize)
         .Take(pageSize)
