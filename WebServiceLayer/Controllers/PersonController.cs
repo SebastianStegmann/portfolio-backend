@@ -1,4 +1,5 @@
 using DataServiceLayer;
+using DataServiceLayer.Models.Person;
 using DataServiceLayer.Models.Title;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -92,7 +93,15 @@ public class PersonController : BaseController<PersonDataService>
         if (userId == null) return Unauthorized();
 
         var bookmarks = _dataService.GetBookmarksByPersonId(userId.Value);
-        return Ok(bookmarks);
+
+        var bookmarkModels = bookmarks.Select(b => new BookmarkModel
+        {
+            Tconst = b.Tconst.Trim(),
+            CreatedAt = b.CreatedAt,
+            TitleURL = GetUrl("GetTitle", new { Tconst = b.Tconst.Trim() })
+        }).ToList();
+
+        return Ok(bookmarkModels);
     }
 
     // Get ratings for the logged-in person - GET: api/person/ratings
@@ -104,7 +113,15 @@ public class PersonController : BaseController<PersonDataService>
         if (userId == null) return Unauthorized();
 
         var ratings = _dataService.GetRatingsByPersonId(userId.Value);
-        return Ok(ratings);
+
+        var ratingsModels = ratings.Select(b => new RatingsModel
+        {
+            Tconst = b.Tconst.Trim(),
+            CreatedAt = b.CreatedAt,
+            TitleURL = GetUrl("GetTitle", new { Tconst = b.Tconst.Trim() })
+        }).ToList();
+
+        return Ok(ratingsModels);
     }
 
 
