@@ -10,4 +10,10 @@ public class Person
     public string Password { get; set; } = null!;
     public DateTime? LastLogin { get; set; }
     public DateTime CreatedAt { get; set; }
+
+    public ICollection<SearchHistory> Search { get; set; } = new List<SearchHistory>();
+    public ICollection<IndividualRating> IndividualRating { get; set; } = new List<IndividualRating>();
+    public ICollection<Bookmark> Bookmark { get; set; } = new List<Bookmark>();
+
+
 }
