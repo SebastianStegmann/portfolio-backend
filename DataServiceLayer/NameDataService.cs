@@ -143,7 +143,6 @@ public class NameDataService : BaseDataService
           .ToList();
     }
 
-<<<<<<< HEAD
     // All roles
     public List<Role> GetAllRoles()
     {
@@ -158,11 +157,3 @@ public class NameDataService : BaseDataService
         return _context.KnownFors.Any(kf => kf.Nconst == nconst);
     }
 }
-=======
-  // All roles
-  public List<Role> GetAllRoles()
-  {
-    return _context.Roles.ToList();
-  }
-}
->>>>>>> functions
