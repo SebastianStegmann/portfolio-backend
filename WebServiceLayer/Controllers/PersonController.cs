@@ -13,7 +13,7 @@ namespace WebServiceLayer.Controllers;
 [Route("api/[controller]")]
 public class PersonController : BaseController<PersonDataService>
 {
-    private const bool USE_DEV_MODE = true; // Set to false for production
+    private const bool USE_DEV_MODE = false; // Set to false for production
 
     public PersonController(
         PersonDataService dataService,
@@ -22,6 +22,11 @@ public class PersonController : BaseController<PersonDataService>
 
     private int? GetCurrentUserId()
     {
+        // DEV-MODE: return hardcoded user ID
+        if (USE_DEV_MODE)
+        {
+            return 1;
+        }
         // PRODUCTION MODE: Get user ID from JWT token
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
@@ -33,6 +38,7 @@ public class PersonController : BaseController<PersonDataService>
     }
 
     // Get logged-in person's information OR all persons in dev mode - GET: api/person
+    [Authorize]
     [HttpGet(Name = nameof(GetLoggedInPerson))]
     public IActionResult GetLoggedInPerson()
     {
@@ -55,7 +61,7 @@ public class PersonController : BaseController<PersonDataService>
         return Ok(model);
     }
 
-    // Get person by ID (admin) - GET: api/person/{id}
+    // Get person by ID - GET: api/person/{id}
     [HttpGet("{id}", Name = nameof(GetPerson))]
     public IActionResult GetPerson(int id)
     {
@@ -65,9 +71,10 @@ public class PersonController : BaseController<PersonDataService>
         return Ok(model);
     }
 
-    // Get search history for the logged-in person
-    [HttpGet("searchhistory")]
-    public IActionResult GetPersonSearchHistory()
+    // Get search history for the logged-in person - GET: api/person/searchhistory
+    [Authorize]
+    [HttpGet("searchhistory", Name = nameof(GetSearchHistory))]
+    public IActionResult GetSearchHistory()
     {
         var userId = GetCurrentUserId();
         if (userId == null) return Unauthorized();
@@ -76,8 +83,9 @@ public class PersonController : BaseController<PersonDataService>
         return Ok(searchHistory);
     }
 
-    // Get bookmarks for the logged-in person
-    [HttpGet("bookmarks")]
+    // Get bookmarks for the logged-in person - GET: api/person/bookmarks
+    [Authorize]
+    [HttpGet("bookmarks", Name = nameof(GetPersonBookmarks))]
     public IActionResult GetPersonBookmarks()
     {
         var userId = GetCurrentUserId();
@@ -87,8 +95,9 @@ public class PersonController : BaseController<PersonDataService>
         return Ok(bookmarks);
     }
 
-    // Get ratings for the logged-in person
-    [HttpGet("ratings")]
+    // Get ratings for the logged-in person - GET: api/person/ratings
+    [Authorize]
+    [HttpGet("ratings", Name = nameof(GetPersonRatings))]
     public IActionResult GetPersonRatings()
     {
         var userId = GetCurrentUserId();
