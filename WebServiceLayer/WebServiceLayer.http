@@ -10,7 +10,7 @@ Accept : application/json
 
 ###
 
-GET {{WebServiceLayer_HostAddress}}/api/titles/tt18361688/allactors
+GET {{WebServiceLayer_HostAddress}}/api/titles/tt18361688/allcast
 Accept : application/json
 
 ###
@@ -75,15 +75,3 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hc
 GET {{WebServiceLayer_HostAddress}}/api/person/ratings
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjUiLCJleHAiOjE3NjI1MDg4ODEsImlzcyI6InBvcnRmb2xpby1iYWNrZW5kIiwiYXVkIjoicG9ydGZvbGlvLWJhY2tlbmQifQ.-BXfZZnNEaLDXjysdGpUXJQYB8BWDQsI-wRVTJGUJ5w
-
-### Get names (no auth required)
-GET {{WebServiceLayer_HostAddress}}/api/names
-Accept: application/json
-
-### Get specific name
-GET {{WebServiceLayer_HostAddress}}/api/names/nm7823096 
-Accept: application/json
-
-### Get all actors for a title
-GET {{WebServiceLayer_HostAddress}}/api/titles/tt18361688/allactors
-Accept: application/json
