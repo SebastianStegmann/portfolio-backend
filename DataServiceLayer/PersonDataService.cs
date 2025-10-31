@@ -18,6 +18,10 @@ public class PersonDataService : BaseDataService
     public Person? GetPerson(int Id)
     {
         return _context.Persons
+            .Include(p => p.Search)
+            .Include(p => p.IndividualRating)
+            .Include(p => p.Bookmark)
+            .FirstOrDefault(p => p.Id == Id);
     }
 
     // search history
