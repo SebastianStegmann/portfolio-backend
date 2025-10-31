@@ -17,7 +17,7 @@ public class PersonDataService : BaseDataService
     // Get a single person by ID
     public Person? GetPerson(int Id)
     {
-        return _context.Persons.Find(Id);
+        return _context.Persons
     }
 
     // search history
