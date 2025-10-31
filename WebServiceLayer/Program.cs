@@ -42,6 +42,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<TitleDataService>();
 builder.Services.AddScoped<NameDataService>();
 builder.Services.AddScoped<PersonDataService>();
+builder.Services.AddScoped<FunctionsDataService>();
 
 
 // jwt
