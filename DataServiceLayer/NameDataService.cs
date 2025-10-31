@@ -143,12 +143,6 @@ public class NameDataService : BaseDataService
           .ToList();
     }
 
-    // All roles
-    public List<Role> GetAllRoles()
-    {
-        return _context.Roles.ToList();
-    }
-
 
     // Helpers
     // Check if a name has any known titles (queries database directly)
