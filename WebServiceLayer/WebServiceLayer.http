@@ -10,7 +10,68 @@ Accept : application/json
 
 ###
 
-GET {{WebServiceLayer_HostAddress}}/api/titles/tt18361688/allactors
+GET {{WebServiceLayer_HostAddress}}/api/titles/tt18361688/allcast
 Accept : application/json
 
 ###
+
+POST {{WebServiceLayer_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "Email": "stud-swindeloev@ruc.dk",
+  "Password": "123456"
+}
+
+###
+
+POST {{WebServiceLayer_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "Email": "test1@example.com",
+  "Password": "Password123"
+}
+
+###
+
+POST {{WebServiceLayer_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "Email": "test1@example.com",
+  "Password": "Password123"
+}
+
+###
+
+POST {{WebServiceLayer_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "Email": "stud-swindeloev@ruc.dk",
+  "Password": "123456"
+}
+
+###
+
+### Get logged-in person info (requires JWT token)
+GET {{WebServiceLayer_HostAddress}}/api/person/1
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjUiLCJleHAiOjE3NjI1MDg4ODEsImlzcyI6InBvcnRmb2xpby1iYWNrZW5kIiwiYXVkIjoicG9ydGZvbGlvLWJhY2tlbmQifQ.-BXfZZnNEaLDXjysdGpUXJQYB8BWDQsI-wRVTJGUJ5w
+
+
+### Get person search history (requires JWT token)
+GET {{WebServiceLayer_HostAddress}}/api/person/searchhistory
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjUiLCJleHAiOjE3NjI1MDg4ODEsImlzcyI6InBvcnRmb2xpby1iYWNrZW5kIiwiYXVkIjoicG9ydGZvbGlvLWJhY2tlbmQifQ.-BXfZZnNEaLDXjysdGpUXJQYB8BWDQsI-wRVTJGUJ5w
+
+### Get person bookmarks (requires JWT token)
+GET {{WebServiceLayer_HostAddress}}/api/person/bookmarks
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjUiLCJleHAiOjE3NjI1MDg4ODEsImlzcyI6InBvcnRmb2xpby1iYWNrZW5kIiwiYXVkIjoicG9ydGZvbGlvLWJhY2tlbmQifQ.-BXfZZnNEaLDXjysdGpUXJQYB8BWDQsI-wRVTJGUJ5w
+
+### Get person ratings (requires JWT token)
+GET {{WebServiceLayer_HostAddress}}/api/person/ratings
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjUiLCJleHAiOjE3NjI1MDg4ODEsImlzcyI6InBvcnRmb2xpby1iYWNrZW5kIiwiYXVkIjoicG9ydGZvbGlvLWJhY2tlbmQifQ.-BXfZZnNEaLDXjysdGpUXJQYB8BWDQsI-wRVTJGUJ5w

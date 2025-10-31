@@ -1,53 +1,162 @@
 using DataServiceLayer;
+using DataServiceLayer.Models.Person;
+using DataServiceLayer.Models.Title;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Xml.Linq;
+using WebServiceLayer.Models;
 
-namespace WebServiceLayer;
+namespace WebServiceLayer.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PersonController : ControllerBase
+public class PersonController : BaseController<PersonDataService>
 {
-    private readonly PersonDataService _personDataService;
+    private const bool USE_DEV_MODE = false; // Set to false for production
 
-    public PersonController(PersonDataService personDataService)
+    public PersonController(
+        PersonDataService dataService,
+        LinkGenerator generator,
+        IMapper mapper) : base(dataService, generator, mapper) { }
+
+    private int? GetCurrentUserId()
     {
-        _personDataService = personDataService;
+        // DEV-MODE: return hardcoded user ID
+        if (USE_DEV_MODE)
+        {
+            return 1;
+        }
+        // PRODUCTION MODE: Get user ID from JWT token
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+        {
+            return userId;
+        }
+
+        return null;
     }
 
-    // Get person by ID
-    [HttpGet("{id}")]
+    // Get logged-in person's information OR all persons in dev mode - GET: api/person
+    [Authorize]
+    [HttpGet(Name = nameof(GetLoggedInPerson))]
+    public IActionResult GetLoggedInPerson()
+    {
+        // DEVELOPMENT MODE: Return all persons
+        if (USE_DEV_MODE)
+        {
+            var allPersons = _dataService.GetAllPersons();
+            var models = allPersons.Select(p => CreatePersonListModel(p)).ToList();
+            return Ok(models);
+        }
+
+        // PRODUCTION MODE: Return only the logged-in user's info
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var person = _dataService.GetPerson(userId.Value);
+        if (person == null) return NotFound();
+
+        var model = CreatePersonListModel(person);
+        return Ok(model);
+    }
+
+    // Get person by ID - GET: api/person/{id}
+    [HttpGet("{id}", Name = nameof(GetPerson))]
     public IActionResult GetPerson(int id)
     {
-        var person = _personDataService.GetPerson(id);
+        var person = _dataService.GetPerson(id);
         if (person == null) return NotFound();
-        return Ok(person);
+        PersonModel model = CreatePersonModel(person);
+        return Ok(model);
     }
 
-    // Get search history for a specific person
+    // Get search history for the logged-in person - GET: api/person/searchhistory
     [Authorize]
-    [HttpGet("{personId}/searchhistory")]
-    public IActionResult GetPersonSearchHistory(int personId)
+    [HttpGet("searchhistory", Name = nameof(GetSearchHistory))]
+    public IActionResult GetSearchHistory()
     {
-        var searchHistory = _personDataService.GetSearchHistoriesByPersonId(personId);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var searchHistory = _dataService.GetSearchHistoriesByPersonId(userId.Value);
         return Ok(searchHistory);
     }
 
+    // Get bookmarks for the logged-in person - GET: api/person/bookmarks
     [Authorize]
-    // Get bookmark from a specific person
-    [HttpGet("{personId}/bookmarks")]
-    public IActionResult GetPersonBookmarks(int personId)
+    [HttpGet("bookmarks", Name = nameof(GetPersonBookmarks))]
+    public IActionResult GetPersonBookmarks()
     {
-        var bookmarks = _personDataService.GetBookmarksByPersonId(personId);
-        return Ok(bookmarks);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var bookmarks = _dataService.GetBookmarksByPersonId(userId.Value);
+
+        var bookmarkModels = bookmarks.Select(b => new BookmarkModel
+        {
+            Tconst = b.Tconst.Trim(),
+            CreatedAt = b.CreatedAt,
+            TitleURL = GetUrl("GetTitle", new { Tconst = b.Tconst.Trim() })
+        }).ToList();
+
+        return Ok(bookmarkModels);
     }
 
+    // Get ratings for the logged-in person - GET: api/person/ratings
     [Authorize]
-    // Get ratings for a specific person
-    [HttpGet("{personId}/ratings")]
-    public IActionResult GetPersonRatings(int personId)
+    [HttpGet("ratings", Name = nameof(GetPersonRatings))]
+    public IActionResult GetPersonRatings()
     {
-        var ratings = _personDataService.GetRatingsByPersonId(personId);
-        return Ok(ratings);
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var ratings = _dataService.GetRatingsByPersonId(userId.Value);
+
+        var ratingsModels = ratings.Select(b => new RatingsModel
+        {
+            Tconst = b.Tconst.Trim(),
+            CreatedAt = b.CreatedAt,
+            TitleURL = GetUrl("GetTitle", new { Tconst = b.Tconst.Trim() })
+        }).ToList();
+
+        return Ok(ratingsModels);
+    }
+
+
+
+    // object-object mapping
+    // Information shown when listing all the persons
+    private PersonListModel CreatePersonListModel(DataServiceLayer.Models.Person.Person person)
+    {
+        var model = _mapper.Map<PersonListModel>(person);
+        model.URL = GetUrl(nameof(GetPerson), new { id = person.Id });
+
+        return model;
+    }
+
+    // Information shown when getting a single person
+    private PersonModel CreatePersonModel(DataServiceLayer.Models.Person.Person person)
+    {
+        var model = _mapper.Map<PersonModel>(person);
+        model.URL = GetUrl(nameof(GetPerson), new { id = person.Id });
+
+        if (person.Search != null && person.Search.Any())
+        {
+            model.SearchURL = GetUrl(nameof(GetSearchHistory), new { });
+        }
+
+        if (person.Bookmark != null && person.Bookmark.Any())
+        {
+            model.BookmarkURL = GetUrl(nameof(GetPersonBookmarks), new { });
+        }
+
+        if (person.IndividualRating != null && person.IndividualRating.Any())
+        {
+            model.IndividualRatingURL = GetUrl(nameof(GetPersonRatings), new { });
+        }
+
+        return model;
     }
 }
