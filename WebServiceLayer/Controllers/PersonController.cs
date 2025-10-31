@@ -106,6 +106,11 @@ public class PersonController : BaseController<PersonDataService>
         var ratings = _dataService.GetRatingsByPersonId(userId.Value);
         return Ok(ratings);
     }
+
+
+
+    // object-object mapping
+    // Information shown when listing all the persons
     private PersonListModel CreatePersonListModel(DataServiceLayer.Models.Person.Person person)
     {
         var model = _mapper.Map<PersonListModel>(person);
@@ -114,10 +119,26 @@ public class PersonController : BaseController<PersonDataService>
         return model;
     }
 
+    // Information shown when getting a single person
     private PersonModel CreatePersonModel(DataServiceLayer.Models.Person.Person person)
     {
         var model = _mapper.Map<PersonModel>(person);
         model.URL = GetUrl(nameof(GetPerson), new { id = person.Id });
+
+        if (person.Search != null && person.Search.Any())
+        {
+            model.SearchURL = GetUrl(nameof(GetSearchHistory), new { });
+        }
+
+        if (person.Bookmark != null && person.Bookmark.Any())
+        {
+            model.BookmarkURL = GetUrl(nameof(GetPersonBookmarks), new { });
+        }
+
+        if (person.IndividualRating != null && person.IndividualRating.Any())
+        {
+            model.IndividualRatingURL = GetUrl(nameof(GetPersonRatings), new { });
+        }
 
         return model;
     }
