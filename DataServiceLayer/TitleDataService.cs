@@ -24,8 +24,6 @@ public class TitleDataService : BaseDataService
   public List<TitleBasics> GetTitles(int page, int pageSize)
   {
     return _context.TitleBasics
-        .Include(x => x.Genre)
-            .ThenInclude(tg => tg.Genre)  // Only load genres for the list
         .OrderBy(x => x.Tconst)
         .Skip(page * pageSize)
         .Take(pageSize)
