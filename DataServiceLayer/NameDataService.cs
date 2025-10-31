@@ -4,6 +4,7 @@ using DataServiceLayer.Models.TitleBasics;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Configuration.Assemblies;
 using System.Text;
 
 namespace DataServiceLayer;
@@ -142,9 +143,9 @@ public class NameDataService : BaseDataService
           .ToList();
     }
 
-    // All roles
-    public List<Role> GetAllRoles()
-    {
-        return _context.Roles.ToList();
-    }
+  // All roles
+  public List<Role> GetAllRoles()
+  {
+    return _context.Roles.ToList();
+  }
 }

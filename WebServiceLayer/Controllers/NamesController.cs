@@ -124,7 +124,6 @@ public class NamesController : BaseController<NameDataService>
         return Ok(names);
     }
 
-
     //object-object mapping
 
     // Information shown when listing all the names
