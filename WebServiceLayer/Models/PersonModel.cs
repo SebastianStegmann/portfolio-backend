@@ -1,4 +1,6 @@
-﻿namespace WebServiceLayer.Models
+﻿using WebServiceLayer.Models.DTO;
+
+namespace WebServiceLayer.Models
 {
     public class PersonModel
     {
@@ -10,5 +12,9 @@
         public string Password { get; set; } = null!;
         public DateTime? LastLogin { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public string? SearchURL { get; set; }
+        public string? BookmarkURL { get; set; }
+        public string? IndividualRatingURL { get; set; }
     }
 }
