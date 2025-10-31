@@ -1,4 +1,4 @@
-using DataServiceLayer.Models;
+using DataServiceLayer.Models.DTO;
 using DataServiceLayer.Models.Name;
 using DataServiceLayer.Models.Title;
 using Microsoft.EntityFrameworkCore;
