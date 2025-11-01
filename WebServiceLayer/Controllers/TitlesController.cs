@@ -117,7 +117,7 @@ public class TitlesController : BaseController<TitleDataService>
         if (cast == null || cast.Count == 0) return NotFound();
 
         //Map tp NameListModel with URLs
-        var castModel = cast.Select(castName => new NameListModel
+        var castModel = cast.Select(castName => new CastMemberModel
         {
             URL = GetUrl("GetName", new { Nconst = castName.Nconst.Trim() }),
             Name = castName.Name,
