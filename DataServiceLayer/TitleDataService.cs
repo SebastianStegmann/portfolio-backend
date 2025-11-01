@@ -34,6 +34,7 @@ public class TitleDataService : BaseDataService
   public TitleBasics? GetTitle(string tconst)
   {
     return _context.TitleBasics
+            .AsSplitQuery()
             .Include(t => t.Names)
             .Include(t => t.Genre)
             .ThenInclude(tg => tg.Genre)
