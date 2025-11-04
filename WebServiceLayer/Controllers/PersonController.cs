@@ -25,7 +25,7 @@ public class PersonController : ControllerBase
     }
 
     // Get search history for a specific person
-    [Authorize]
+    [Authorize(Policy = "SameUserOnly")]
     [HttpGet("{personId}/searchhistory")]
     public IActionResult GetPersonSearchHistory(int personId)
     {
@@ -33,7 +33,7 @@ public class PersonController : ControllerBase
         return Ok(searchHistory);
     }
 
-    [Authorize]
+    [Authorize(Policy = "SameUserOnly")]
     // Get bookmark from a specific person
     [HttpGet("{personId}/bookmarks")]
     public IActionResult GetPersonBookmarks(int personId)
@@ -42,7 +42,7 @@ public class PersonController : ControllerBase
         return Ok(bookmarks);
     }
 
-    [Authorize]
+    [Authorize(Policy = "SameUserOnly")]
     // Get ratings for a specific person
     [HttpGet("{personId}/ratings")]
     public IActionResult GetPersonRatings(int personId)

@@ -29,6 +29,7 @@ public class PersonDataService : BaseDataService
     {
         return _context.SearchHistories.Find(id);
     }
+
     public List<SearchHistory> GetSearchHistoriesByPersonId(int personId)
     {
         return _context.SearchHistories.Where(sh => sh.PersonId == personId).ToList();
