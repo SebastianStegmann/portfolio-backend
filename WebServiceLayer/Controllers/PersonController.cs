@@ -23,11 +23,11 @@ public class PersonController : BaseController<PersonDataService>
 
     private int? GetCurrentUserId()
     {
-        // DEV-MODE: return hardcoded user ID
-        if (USE_DEV_MODE)
-        {
-            return 1;
-        }
+        // // DEV-MODE: return hardcoded user ID
+        // if (USE_DEV_MODE)
+        // {
+        //     return 1;
+        // }
         // PRODUCTION MODE: Get user ID from JWT token
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
@@ -84,7 +84,6 @@ public class PersonController : BaseController<PersonDataService>
         return Ok(searchHistory);
     }
 
-    // Get bookmarks for the logged-in person - GET: api/person/bookmarks
     [Authorize]
     [HttpGet("bookmarks", Name = nameof(GetPersonBookmarks))]
     public IActionResult GetPersonBookmarks()

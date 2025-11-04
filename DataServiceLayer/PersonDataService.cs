@@ -25,7 +25,7 @@ public class PersonDataService : BaseDataService
     }
 
     // search history
-        public List<SearchHistory> GetSearchHistoriesByPersonId(int personId)
+    public List<SearchHistory> GetSearchHistoriesByPersonId(int personId)
     {
         return _context.SearchHistories.Where(sh => sh.PersonId == personId).ToList();
     }
