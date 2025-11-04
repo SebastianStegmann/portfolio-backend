@@ -59,12 +59,12 @@ public class AuthController : ControllerBase
         var existing = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
         if (existing == null)
             return BadRequest("User doesn't exist.");
-        // Verify password
+
         if (!VerifyPassword(model.Password, existing.Password))
             return Unauthorized("Invalid password.");
         _context.Persons.Remove(existing);
         _context.SaveChanges();
-        return Ok("User deleted successfully.");
+        return Ok();
     }
 
     // HELPERS ##################################

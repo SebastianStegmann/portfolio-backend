@@ -4,7 +4,6 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
-
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace DataService.IntegrationTests;
@@ -19,9 +18,14 @@ public abstract class ApiTestBase
     }
 
     // Helpers
-    protected (JObject?, HttpStatusCode) PostData(string url, object content)
+    protected (JObject?, HttpStatusCode) PostData(string url, object content, string? jwt = null)
     {
         using var client = new HttpClient();
+        if (!string.IsNullOrEmpty(jwt))
+        {
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+        }
+
         var requestContent = new StringContent(
             JsonConvert.SerializeObject(content),
             Encoding.UTF8,
@@ -41,13 +45,19 @@ public abstract class ApiTestBase
         catch (JsonException ex)
         {
             output.WriteLine($"POST {url} succeeded but invalid JSON: {dataStr}. Error: {ex.Message}");
+            Assert.Fail($"Unexpected non-JSON response from {url}: {dataStr}"); // Fail the test
             return (null, response.StatusCode);
         }
     }
 
-    protected (JArray?, HttpStatusCode) GetArray(string url)
+    protected (JArray?, HttpStatusCode) GetArray(string url, string? jwt = null)
     {
         using var client = new HttpClient();
+
+        if (!string.IsNullOrEmpty(jwt))
+        {
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+        }
         var response = client.GetAsync(url).Result;
         var dataStr = response.Content.ReadAsStringAsync().Result;
         if (!response.IsSuccessStatusCode)
@@ -67,9 +77,15 @@ public abstract class ApiTestBase
         }
     }
 
-    protected (JObject?, HttpStatusCode) GetObject(string url)
+    protected (JObject?, HttpStatusCode) GetObject(string url, string? jwt = null)
     {
         using var client = new HttpClient();
+
+        if (!string.IsNullOrEmpty(jwt))
+        {
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+        }
+
         var response = client.GetAsync(url).Result;
         var dataStr = response.Content.ReadAsStringAsync().Result;
         if (!response.IsSuccessStatusCode)
@@ -159,34 +175,46 @@ public class AuthApiTests : ApiTestBase
         };
     }
 
-[Fact]
-public void ApiAuth_FullFlow()
-{
-    // Register
-    var (regData, regStatus) = PostData($"{AuthApi}/register", _userData);
-    Assert.Equal(HttpStatusCode.OK, regStatus);
-    output.WriteLine($"Register: {regStatus}");
+    [Fact]
+    public void ApiAuth_FullFlow()
+    {
+        // Register
+        var (regData, regStatus) = PostData($"{AuthApi}/register", _userData);
+        Assert.Equal(HttpStatusCode.OK, regStatus);
+        output.WriteLine($"Register: {regStatus}");
 
-    // Login
-    var (loginData, loginStatus) = PostData($"{AuthApi}/login", _userData);
-    Assert.Equal(HttpStatusCode.OK, loginStatus);
-    output.WriteLine(loginData?.ToString() ?? "login data was null");
-    output.WriteLine($"Login: {loginStatus}");
-    // Optionally extract JWT if present
-    JWT = loginData?["token"]?.Value<string>();
-    Assert.NotNull(JWT);
+        // Login
+        var (loginData, loginStatus) = PostData($"{AuthApi}/login", _userData);
+        Assert.Equal(HttpStatusCode.OK, loginStatus);
+        output.WriteLine(loginData?.ToString() ?? "The login data was null (No JWT returned)");
+        output.WriteLine($"Login: {loginStatus}");
 
-    //Test using not using JWT
-    //
-    //Test using JWT but for wrong user id
-    //
-    //Test using JWT for same user
+        // Grab JWT for future tests
+        JWT = loginData?["token"]?.Value<string>();
+        Assert.NotNull(JWT);
 
-    // Delete
-    var (delData, delStatus) = PostData($"{AuthApi}/delete", _userData);
-    output.WriteLine(delData?.ToString() ?? "delete data was null");
-    output.WriteLine($"Delete: {delStatus}");
-    Assert.Equal(HttpStatusCode.OK, delStatus);
-}
+        // Test using no JWT (expect Unauthorized for protected endpoint)
+        var (noJwtData, noJwtStatus) = GetObject(PersonApi, null);
+        Assert.Equal(HttpStatusCode.Unauthorized, noJwtStatus);
+        output.WriteLine($"No JWT: {noJwtStatus}");
+
+        // Test using bad/invalid JWT (expect Unauthorized)
+        var invalidJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.invalid.payload.invalid-signature"; // Bad token
+        var (badJwtData, badJwtStatus) = GetObject(PersonApi, invalidJwt);
+        Assert.Equal(HttpStatusCode.Unauthorized, badJwtStatus); 
+        output.WriteLine($"Bad JWT: {badJwtStatus}");
+
+        // Test using valid JWT for same user (expect OK)
+        var (validJwtData, validJwtStatus) = GetObject(PersonApi, JWT);
+        Assert.Equal(HttpStatusCode.OK, validJwtStatus);
+        Assert.NotNull(validJwtData);
+        output.WriteLine($"Valid JWT: {validJwtStatus}");
+
+        // Delete
+        var (delData, delStatus) = PostData($"{AuthApi}/delete", _userData);
+        output.WriteLine(delData?.ToString() ?? "The returned delete data was null");
+        output.WriteLine($"Delete: {delStatus}");
+        Assert.Equal(HttpStatusCode.OK, delStatus);
+    }
 
 }
