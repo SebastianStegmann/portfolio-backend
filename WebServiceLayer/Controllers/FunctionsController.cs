@@ -34,16 +34,20 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(results);
     }
 
-    // api/functions/find-coplayers?nconst=nm0705356&personId=2&limit=10
+    // api/functions/find-coplayers?nconst=nm0705356&limit=10
+    [Authorize]
     [HttpGet("find-coplayers", Name = nameof(FindCoplayers))]
-    public IActionResult FindCoplayers([FromQuery] string nconst, [FromQuery] long personId, [FromQuery] int limit = 10)
+    public IActionResult FindCoplayers([FromQuery] string nconst, [FromQuery] int limit = 10)
     {
+        var personId = GetCurrentUserId();
+        if (personId == null) return Unauthorized();
+
         if (string.IsNullOrEmpty(nconst))
         {
             return BadRequest("Nconst parameter is required");
         }
         
-        var results = _dataService.FindCoplayers(nconst, personId, limit);
+        var results = _dataService.FindCoplayers(nconst, (int)personId, limit);
         return Ok(results);
     }
 

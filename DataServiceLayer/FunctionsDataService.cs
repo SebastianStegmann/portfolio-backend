@@ -25,7 +25,7 @@ public class FunctionsDataService : BaseDataService
         return results;
     }
 
-    public List<CoplayerSearchResult> FindCoplayers(string nconst, long personId, int limitCount = 10)
+    public List<CoplayerSearchResult> FindCoplayers(string nconst, int personId, int limitCount = 10)
     {
         var results = _context.Database
             .SqlQueryRaw<CoplayerSearchResult>(
