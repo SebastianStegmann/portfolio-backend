@@ -36,6 +36,13 @@ public class PersonDataService : BaseDataService
         return _context.Bookmarks.Where(b => b.PersonId == personId).ToList();
     }
 
+
+    // bookmarks
+    public List<NameBookmark> GetNameBookmarksByPersonId(int personId)
+    {
+        return _context.NameBookmarks.Where(b => b.PersonId == personId).ToList();
+    }
+
     // rating
     public List<IndividualRating> GetRatingsByPersonId(int personId)
     {

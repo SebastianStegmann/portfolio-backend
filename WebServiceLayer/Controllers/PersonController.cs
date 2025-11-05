@@ -101,6 +101,26 @@ public class PersonController : BaseController<PersonDataService>
         }).ToList();
 
         return Ok(bookmarkModels);
+
+    }
+
+    [Authorize]
+    [HttpGet("name_bookmarks", Name = nameof(GetPersonNameBookmarks))]
+    public IActionResult GetPersonNameBookmarks()
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var bookmarks = _dataService.GetNameBookmarksByPersonId(userId.Value);
+
+        var bookmarkModels = bookmarks.Select(b => new NameBookmarkModel
+        {
+            Nconst = b.Nconst.Trim(),
+            CreatedAt = b.CreatedAt,
+            TitleURL = GetUrl("GetTitle", new { Tconst = b.Nconst.Trim() })
+        }).ToList();
+
+        return Ok(bookmarkModels);
     }
 
     // Get ratings for the logged-in person - GET: api/person/ratings
