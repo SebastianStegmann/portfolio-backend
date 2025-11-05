@@ -46,7 +46,7 @@ public class TitlesController : BaseController<TitleDataService>
     return Ok(model);
   }
 
-    // Getting the genres for the title - GET: api/titles/{tconst}/genres
+    // api/titles/{tconst}/genres
     [HttpGet("{tconst}/genres", Name = nameof(GetGenresForTitle))]
     public IActionResult GetGenresForTitle(string tconst)
     {
@@ -65,7 +65,7 @@ public class TitlesController : BaseController<TitleDataService>
         return Ok(genres);
     }
 
-    // Getting the alternate titles for the movie - GET: api/titles/{tconst}/akas
+    // api/titles/{tconst}/akas
     [HttpGet("{tconst}/akas", Name = nameof(GetAkasForTitle))]
     public IActionResult GetAkasForTitle(string tconst)
     {
@@ -85,7 +85,7 @@ public class TitlesController : BaseController<TitleDataService>
         return Ok(akas);
     }
 
-    // Getting the episodes for series - GET: api/titles/{tconst}/episodes
+    // api/titles/{tconst}/episodes
     [HttpGet("{tconst}/episodes", Name = nameof(GetEpisodesForTitle))]
     public IActionResult GetEpisodesForTitle(string tconst)
     {
@@ -109,7 +109,7 @@ public class TitlesController : BaseController<TitleDataService>
         return Ok(episodes);
     }
 
-    // Getting all names known for a specific title - GET: api/titles/{tconst}/allcast
+    // api/titles/{tconst}/allcast
     [HttpGet("{tconst}/allcast", Name = nameof(GetCastForTitle))]
     public IActionResult GetCastForTitle(string tconst)
     {
@@ -141,7 +141,7 @@ public class TitlesController : BaseController<TitleDataService>
         return Ok(awards);
     }
 
-    // Getting information on overall rating for a specific title - GET: api/titles/{tconst}/overallrating
+    // api/titles/{tconst}/overallrating
     [HttpGet("{tconst}/overallrating", Name = nameof(GetOverallRatings))]
     public IActionResult GetOverallRatings(string tconst)
     {
@@ -150,8 +150,8 @@ public class TitlesController : BaseController<TitleDataService>
 
         var ratings = new RatingDTO
         {
-            Rating = overallRating.Rating.ToString("N0"),  // Format with thousand separators
-            Votes = overallRating.Votes.ToString("N0")  // Format with thousand separators
+            Rating = overallRating.Rating, 
+            Votes = overallRating.Votes 
         };
 
         return Ok(ratings);
@@ -159,7 +159,6 @@ public class TitlesController : BaseController<TitleDataService>
 
     //object-object mapping
 
-    // Information shown when listing all the titles
     private TitleListModel CreateTitleListModel(DataServiceLayer.Models.Title.TitleBasics title)
     {
         var model = _mapper.Map<TitleListModel>(title);
@@ -212,8 +211,8 @@ public class TitlesController : BaseController<TitleDataService>
         {
             model.OverallRating = new RatingDTO
             {
-                Rating = title.OverallRating.Rating.ToString("N0"), // Format with thousand separators
-                Votes = title.OverallRating.Votes.ToString("N0")  // Format with thousand separators
+                Rating = title.OverallRating.Rating,
+                Votes = title.OverallRating.Votes
             };
         }
 

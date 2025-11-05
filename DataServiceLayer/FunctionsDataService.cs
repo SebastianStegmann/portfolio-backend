@@ -144,13 +144,11 @@ public class FunctionsDataService : BaseDataService
         // Convert list to PostgreSQL array format: ARRAY['keyword1','keyword2']
         var keywordsArray = "ARRAY[" + string.Join(",", keywords.Select(k => $"'{k.Replace("'", "''")}'")) + "]";
         // Sanitize input to prevent SQL injection
-#pragma warning disable EF1002
         var results = _context.Database
             .SqlQueryRaw<BestMatchResult>(
                 $"SELECT * FROM best_match_query({keywordsArray}::text[], {limitCount})"
             )
             .ToList();
-#pragma warning restore EF1002
 
         return results;
     }
@@ -159,13 +157,11 @@ public class FunctionsDataService : BaseDataService
     {
         var keywordsArray = "ARRAY[" + string.Join(",", keywords.Select(k => $"'{k.Replace("'", "''")}'")) + "]";
 
-#pragma warning disable EF1002
         var results = _context.Database
             .SqlQueryRaw<WordToWordsResult>(
                 $"SELECT * FROM word_to_words_query({keywordsArray}::text[])"
             )
             .ToList();
-#pragma warning restore EF1002
 
         return results;
     }
