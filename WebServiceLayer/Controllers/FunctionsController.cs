@@ -277,7 +277,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
     
     
 
-    // api/functions/string-search?searchString=batman&personId=1
+    // api/functions/string-search?searchString=batman
     [Authorize]
     [HttpGet("string-search", Name = nameof(StringSearch))]
     public IActionResult StringSearch([FromQuery] string searchString)
@@ -300,10 +300,15 @@ public class FunctionsController : BaseController<FunctionsDataService>
     }
 
     // api/functions/rate
+    [Authorize]
     [HttpPost("rate", Name = nameof(RateTitle))]
     public IActionResult RateTitle([FromBody] RateTitleRequest request)
     {
-        if (request == null || string.IsNullOrEmpty(request.Tconst) || request.PersonId <= 0)
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+        if (userId != request.PersonId) return Unauthorized();
+
+        if (request == null || string.IsNullOrEmpty(request.Tconst) )
         {
             return BadRequest("Tconst and PersonId are required");
         }
@@ -313,7 +318,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
             return BadRequest("Rating must be between 1 and 10");
         }
         
-        var result = _dataService.RateTitle(request.Tconst, request.PersonId, request.Rating);
+        var result = _dataService.RateTitle(request.Tconst, (int)userId, request.Rating);
         
         if (result.Status.StartsWith("Error"))
         {

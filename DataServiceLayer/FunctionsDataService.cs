@@ -297,7 +297,7 @@ public class FunctionsDataService : BaseDataService
         return results;
     }
 
-    public StatusResult RateTitle(string tconst, long personId, int rating)
+    public StatusResult RateTitle(string tconst, int personId, int rating)
     {
         var result = _context.Database
             .SqlQueryRaw<StatusResult>(
