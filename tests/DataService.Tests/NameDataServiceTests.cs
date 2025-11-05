@@ -64,7 +64,7 @@ public class NameDataServiceTests
         var result = _service.GetName(firstName.Nconst);
 
         Assert.NotNull(result);
-        Assert.Equal(firstName.Nconst, result!.Nconst);
+        Assert.Equal(firstName.Nconst, result.Nconst);
         Assert.NotNull(result.Titles);
     }
 
