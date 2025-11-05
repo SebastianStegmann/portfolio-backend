@@ -7,8 +7,8 @@ namespace WebServiceLayer.Models
     {
         public string? URL { get; set; }
         public string? TitleType { get; set; }
-        public string PrimaryTitle { get; set; } = string.Empty;
-        public string OriginalTitle { get; set; } = string.Empty;
+        public required string PrimaryTitle { get; set; }
+        public required string OriginalTitle { get; set; }
         public bool? IsAdult { get; set; }
         public string? ReleaseDate { get; set; }
         public string? EndYear { get; set; }

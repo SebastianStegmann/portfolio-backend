@@ -2,7 +2,7 @@
 {
     public class AkaDTO
     {
-        public string Title { get; set; } = string.Empty;
+        public required string Title { get; set; }
         public string? Region { get; set; }
         public string? Language { get; set; }
     }
