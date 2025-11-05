@@ -156,6 +156,76 @@ public class TitleApiTests : ApiTestBase
         Assert.NotNull(data);
         Assert.NotEmpty(data);
     }
+
+    [Fact]
+    public void ApiTitles_GetTitle_ReturnsOkAndNonEmpty()
+    {
+        var tconst = "tt0167261"; // LOTR
+        var (data, statusCode) = GetObject($"{TitlesApi}/{tconst}");
+        Assert.Equal(HttpStatusCode.OK, statusCode);
+        Assert.NotNull(data);
+        Assert.NotEmpty(data);
+    }
+
+    [Fact]
+    public void ApiTitles_GetTitleGenres()
+    {
+        var tconst = "tt0167261"; // LOTR
+        var (data, statusCode) = GetArray($"{TitlesApi}/{tconst}/genres");
+        Assert.Equal(HttpStatusCode.OK, statusCode);
+        Assert.NotNull(data);
+        Assert.NotEmpty(data);
+    }
+
+    [Fact]
+    public void ApiTitles_GetTitleAkas()
+    {
+        var tconst = "tt0167261"; // LOTR
+        var (data, statusCode) = GetArray($"{TitlesApi}/{tconst}/akas");
+        Assert.Equal(HttpStatusCode.OK, statusCode);
+        Assert.NotNull(data);
+        Assert.NotEmpty(data);
+    }
+
+    [Fact]
+    public void ApiTitles_GetTitleEpisodes()
+    {
+        var tconst = "tt0098936"; // Twin Peaks
+        var (data, statusCode) = GetArray($"{TitlesApi}/{tconst}/episodes");
+        Assert.Equal(HttpStatusCode.OK, statusCode);
+        Assert.NotNull(data);
+        Assert.NotEmpty(data);
+    }
+
+    [Fact]
+    public void ApiTitles_GetTitleAllCast()
+    {
+        var tconst = "tt0098936"; // Twin Peaks
+        var (data, statusCode) = GetArray($"{TitlesApi}/{tconst}/allcast");
+        Assert.Equal(HttpStatusCode.OK, statusCode);
+        Assert.NotNull(data);
+        Assert.NotEmpty(data);
+    }
+
+    [Fact]
+    public void ApiTitles_GetTitleAwards()
+    {
+        var tconst = "tt0098936"; // Twin Peaks
+        var (data, statusCode) = GetObject($"{TitlesApi}/{tconst}/awards");
+        Assert.Equal(HttpStatusCode.OK, statusCode);
+        Assert.NotNull(data);
+        Assert.NotEmpty(data);
+    }
+
+    [Fact]
+    public void ApiTitles_GetTitleOverallRating()
+    {
+        var tconst = "tt0098936"; // Twin Peaks
+        var (data, statusCode) = GetObject($"{TitlesApi}/{tconst}/overallrating");
+        Assert.Equal(HttpStatusCode.OK, statusCode);
+        Assert.NotNull(data);
+        Assert.NotEmpty(data);
+    }
 }
 
 public class AuthApiTests : ApiTestBase

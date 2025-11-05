@@ -2,6 +2,7 @@ using DataServiceLayer;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebServiceLayer.Models;
+using WebServiceLayer.Models.Functions;
 
 namespace WebServiceLayer.Controllers;
 
@@ -14,7 +15,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         LinkGenerator generator,
         IMapper mapper) : base(dataService, generator, mapper) { }
 
-    // Find_names endpoint - GET: api/functions/find-names?name=radcliffe&personId=1&limit=10
+    // api/functions/find-names?name=radcliffe&personId=1&limit=10
     [HttpGet("find-names", Name = nameof(FindNames))]
     public IActionResult FindNames([FromQuery] string name, [FromQuery] long personId, [FromQuery] int limit = 10)
     {
@@ -27,7 +28,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(results);
     }
 
-    // Find_coplayers endpoint - GET: api/functions/find-coplayers?nconst=nm0705356&personId=2&limit=10
+    // api/functions/find-coplayers?nconst=nm0705356&personId=2&limit=10
     [HttpGet("find-coplayers", Name = nameof(FindCoplayers))]
     public IActionResult FindCoplayers([FromQuery] string nconst, [FromQuery] long personId, [FromQuery] int limit = 10)
     {
@@ -40,7 +41,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(results);
     }
 
-    // Name rating endpoint - GET: api/functions/name-rating?nconst=nm0705356
+    // api/functions/name-rating?nconst=nm0705356
     [HttpGet("name-rating", Name = nameof(GetNameRating))]
     public IActionResult GetNameRating([FromQuery] string nconst)
     {
@@ -59,27 +60,27 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(result);
     }
 
-    // Seed name ratings - POST: api/functions/seed-name-ratings
-    [HttpPost("seed-name-ratings", Name = nameof(SeedNameRatings))]
-    public IActionResult SeedNameRatings([FromBody] List<string> nconsts)
-    {
-        if (nconsts == null || nconsts.Count == 0)
-        {
-            return BadRequest("Nconsts list is required and cannot be empty");
-        }
-        
-        var successCount = _dataService.SeedNameRatings(nconsts);
-        
-        return Ok(new 
-        { 
-            message = "Name ratings seeding completed",
-            totalRequested = nconsts.Count,
-            successfullyProcessed = successCount,
-            failed = nconsts.Count - successCount
-        });
-    }
+    // // api/functions/seed-name-ratings
+    // [HttpPost("seed-name-ratings", Name = nameof(SeedNameRatings))]
+    // public IActionResult SeedNameRatings([FromBody] List<string> nconsts)
+    // {
+    //     if (nconsts == null || nconsts.Count == 0)
+    //     {
+    //         return BadRequest("Nconsts list is required and cannot be empty");
+    //     }
+    //
+    //     var successCount = _dataService.SeedNameRatings(nconsts);
+    //
+    //     return Ok(new 
+    //     { 
+    //         message = "Name ratings seeding completed",
+    //         totalRequested = nconsts.Count,
+    //         successfullyProcessed = successCount,
+    //         failed = nconsts.Count - successCount
+    //     });
+    // }
 
-    // Popular actors in a title - GET: api/functions/popular-actors?primaryTitle=Iron man&limit=10
+    // api/functions/popular-actors?primaryTitle=Iron man&limit=10
     [HttpGet("popular-actors", Name = nameof(GetPopularActors))]
     public IActionResult GetPopularActors([FromQuery] string primaryTitle, [FromQuery] int limit = 10)
     {
@@ -92,7 +93,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(results);
     }
 
-    // Popular coplayers of an actor - GET: api/functions/popular-coplayers?name=Robert Downey Jr.&limit=10
+    // api/functions/popular-coplayers?name=Robert Downey Jr.&limit=10
     [HttpGet("popular-coplayers", Name = nameof(GetPopularCoplayers))]
     public IActionResult GetPopularCoplayers([FromQuery] string name, [FromQuery] int limit = 10)
     {
@@ -105,7 +106,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(results);
     }
 
-    // Related movies - GET: api/functions/related-movies?tconst=tt0371746&limit=10
+    // api/functions/related-movies?tconst=tt0371746&limit=10
     [HttpGet("related-movies", Name = nameof(GetRelatedMovies))]
     public IActionResult GetRelatedMovies([FromQuery] string tconst, [FromQuery] int limit = 10)
     {
@@ -118,7 +119,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(results);
     }
 
-    // Frequent person words - GET: api/functions/frequent-person-words?name=Tom Hanks&limit=10
+    // api/functions/frequent-person-words?name=Tom Hanks&limit=10
     [HttpGet("frequent-person-words", Name = nameof(GetFrequentPersonWords))]
     public IActionResult GetFrequentPersonWords([FromQuery] string name, [FromQuery] int limit = 10)
     {
@@ -131,7 +132,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(results);
     }
 
-    // Exact match search - GET: api/functions/exact-match?input=iron man&limit=10
+    // api/functions/exact-match?input=iron man&limit=10
     [HttpGet("exact-match", Name = nameof(GetExactMatch))]
     public IActionResult GetExactMatch([FromQuery] string input, [FromQuery] int limit = 10)
     {
@@ -144,7 +145,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(results);
     }
 
-    // Best match search - GET: api/functions/best-match?keywords=iron,man&limit=10
+    // api/functions/best-match?keywords=iron,man&limit=10
     [HttpGet("best-match", Name = nameof(GetBestMatch))]
     public IActionResult GetBestMatch([FromQuery] string keywords, [FromQuery] int limit = 10)
     {
@@ -167,7 +168,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(results);
     }
 
-    // Word to words query - GET: api/functions/word-to-words?keywords=iron,man
+    // api/functions/word-to-words?keywords=iron,man
     [HttpGet("word-to-words", Name = nameof(GetWordToWords))]
     public IActionResult GetWordToWords([FromQuery] string keywords)
     {
@@ -260,6 +261,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(result);
     }
 
+    */
     // Bookmark Endpoints
 
     // Add title bookmark - POST: api/functions/bookmarks/title
@@ -288,6 +290,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(result);
     }
 
+    /*
     // Get user bookmarks - GET: api/functions/bookmarks/{userId}
     [HttpGet("bookmarks/{userId}", Name = nameof(GetUserBookmarks))]
     public IActionResult GetUserBookmarks(long userId)

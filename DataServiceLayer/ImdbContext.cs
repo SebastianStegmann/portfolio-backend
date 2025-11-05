@@ -34,6 +34,9 @@ public class ImdbContext : DbContext
     public DbSet<SearchHistory> SearchHistories { get; set; }
     public DbSet<Bookmark> Bookmarks { get; set; }
     public DbSet<IndividualRating> IndividualRatings { get; set; }
+    
+    // name_bookmark
+    public DbSet<NameBookmark> NameBookmarks { get; set; }
 
 
     public ImdbContext(DbContextOptions<ImdbContext> options) : base(options) { }
@@ -292,5 +295,16 @@ public class ImdbContext : DbContext
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
         });
+
+        // name_bookmark person_id tconst created_at
+        modelBuilder.Entity<NameBookmark>().ToTable("name_bookmark");
+        modelBuilder.Entity<NameBookmark>(entity =>
+        {
+            entity.HasKey(e => new { e.PersonId, e.Nconst });
+            entity.Property(e => e.PersonId).HasColumnName("person_id");
+            entity.Property(e => e.Nconst).HasColumnName("nconst");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+        });
+
     }
 }
