@@ -200,78 +200,6 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(results);
     }
 
-    /* User Management Endpoints 
-
-    // Register person - POST: api/functions/register-person
-    [HttpPost("register-person", Name = nameof(RegisterPerson))]
-    public IActionResult RegisterPerson([FromBody] RegisterPersonRequest request)
-    {
-        if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
-        {
-            return BadRequest("Email and password are required");
-        }
-        
-        var result = _dataService.RegisterPerson(
-            request.Name ?? string.Empty,
-            request.Birthday,
-            request.Location,
-            request.Email,
-            request.Password
-        );
-        
-        if (result.Status.StartsWith("Error"))
-        {
-            return BadRequest(result);
-        }
-        
-        return Ok(result);
-    }
-
-    // Update person - PUT: api/functions/update-person
-    [HttpPut("update-person", Name = nameof(UpdatePerson))]
-    public IActionResult UpdatePerson([FromBody] UpdatePersonRequest request)
-    {
-        if (request == null || request.UserId <= 0)
-        {
-            return BadRequest("UserId is required");
-        }
-        
-        var result = _dataService.UpdatePerson(
-            request.UserId,
-            request.Name,
-            request.Birthday,
-            request.Location,
-            request.Email
-        );
-        
-        if (result.Status.StartsWith("Error"))
-        {
-            return BadRequest(result);
-        }
-        
-        return Ok(result);
-    }
-
-    // Delete user - DELETE: api/functions/delete-user/{userId}
-    [HttpDelete("delete-user/{userId}", Name = nameof(DeleteUser))]
-    public IActionResult DeleteUser(long userId)
-    {
-        if (userId <= 0)
-        {
-            return BadRequest("Valid userId is required");
-        }
-        
-        var result = _dataService.DeleteUser(userId);
-        
-        if (result.Status.StartsWith("Error"))
-        {
-            return NotFound(result);
-        }
-        
-        return Ok(result);
-    }
-
-    */
     // Bookmark Endpoints
 
     // api/functions/bookmarks/title
@@ -311,21 +239,6 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(result);
     }
 
-    /*
-    // Get user bookmarks - GET: api/functions/bookmarks/{userId}
-    [HttpGet("bookmarks/{userId}", Name = nameof(GetUserBookmarks))]
-    public IActionResult GetUserBookmarks(long userId)
-    {
-        if (userId <= 0)
-        {
-            return BadRequest("Valid userId is required");
-        }
-        
-        var results = _dataService.GetUserBookmarks(userId);
-        return Ok(results);
-    }
-    */
-
     // Delete title bookmark - DELETE: api/functions/bookmarks/title
     [Authorize]
     [HttpDelete("bookmarks/title", Name = nameof(DeleteTitleBookmark))]
@@ -364,10 +277,14 @@ public class FunctionsController : BaseController<FunctionsDataService>
     
     
 
-    // String search - GET: api/functions/string-search?searchString=batman&personId=1
+    // api/functions/string-search?searchString=batman&personId=1
+    [Authorize]
     [HttpGet("string-search", Name = nameof(StringSearch))]
-    public IActionResult StringSearch([FromQuery] string searchString, [FromQuery] long personId)
+    public IActionResult StringSearch([FromQuery] string searchString)
     {
+        var personId = GetCurrentUserId();
+        if (personId == null) return Unauthorized();
+
         if (string.IsNullOrEmpty(searchString))
         {
             return BadRequest("SearchString parameter is required");
@@ -378,11 +295,11 @@ public class FunctionsController : BaseController<FunctionsDataService>
             return BadRequest("Valid personId is required");
         }
         
-        var results = _dataService.StringSearch(searchString, personId);
+        var results = _dataService.StringSearch(searchString, (int)personId);
         return Ok(results);
     }
 
-    // Rate title - POST: api/functions/rate
+    // api/functions/rate
     [HttpPost("rate", Name = nameof(RateTitle))]
     public IActionResult RateTitle([FromBody] RateTitleRequest request)
     {
@@ -406,7 +323,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(result);
     }
 
-    // Structured string search - POST: api/functions/structured-search
+    // api/functions/structured-search
     [HttpPost("structured-search", Name = nameof(StructuredStringSearch))]
     public IActionResult StructuredStringSearch([FromBody] StructuredSearchRequest request)
     {

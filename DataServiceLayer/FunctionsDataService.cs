@@ -284,7 +284,7 @@ public class FunctionsDataService : BaseDataService
         return result ?? new StatusResult { Status = "Error: Delete bookmark failed" };
     }
 
-    public List<StringSearchResult> StringSearch(string searchString, long personId)
+    public List<StringSearchResult> StringSearch(string searchString, int personId)
     {
         var results = _context.Database
             .SqlQueryRaw<StringSearchResult>(
