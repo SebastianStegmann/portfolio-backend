@@ -329,12 +329,18 @@ public class FunctionsController : BaseController<FunctionsDataService>
     }
 
     // api/functions/structured-search
-    [HttpPost("structured-search", Name = nameof(StructuredStringSearch))]
+    [Authorize]
+    [HttpGet("structured-search", Name = nameof(StructuredStringSearch))]
     public IActionResult StructuredStringSearch([FromBody] StructuredSearchRequest request)
     {
-        if (request == null || request.PersonId <= 0)
+
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+        if (userId != request.PersonId) return Unauthorized();
+
+        if (request == null)
         {
-            return BadRequest("PersonId is required");
+            return BadRequest("Bad query");
         }
         
         var limit = request.Limit ?? 10;
@@ -349,21 +355,4 @@ public class FunctionsController : BaseController<FunctionsDataService>
         
         return Ok(results);
     }
-}
-
-public class RateTitleRequest
-{
-    public string Tconst { get; set; } = null!;
-    public long PersonId { get; set; }
-    public int Rating { get; set; }
-}
-
-public class StructuredSearchRequest
-{
-    public string? TitleText { get; set; }
-    public string? PlotText { get; set; }
-    public string? CharacterText { get; set; }
-    public string? PersonText { get; set; }
-    public long PersonId { get; set; }
-    public int? Limit { get; set; }
 }

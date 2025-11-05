@@ -317,7 +317,7 @@ public class FunctionsDataService : BaseDataService
         string? plotText,
         string? characterText,
         string? personText,
-        long personId,
+        int personId,
         int limitCount = 10)
     {
         var results = _context.Database
