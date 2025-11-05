@@ -2,10 +2,10 @@ namespace DataServiceLayer.Models.Title;
 
 public class TitleEpisode
 {
-    public string Tconst { get; set; } = string.Empty;
+    public required string Tconst { get; set; }
     public string? ParentTconst { get; set; }
-    public string PrimaryTitle { get; set; } = string.Empty;
-    public string OriginalTitle { get; set; } = string.Empty;
+    public required string PrimaryTitle { get; set; }
+    public required string OriginalTitle { get; set; }
     public bool? IsAdult { get; set; }
     public string? ReleaseDate { get; set; }
     public int? RuntimeMinutes { get; set; }

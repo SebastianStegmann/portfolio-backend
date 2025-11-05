@@ -2,7 +2,7 @@ namespace DataServiceLayer.Models.Title;
 
 public class TitleGenre
 {
-    public string Tconst { get; set; } = string.Empty;
+    public required string Tconst { get; set; }
     public short GenreId { get; set; }
 
     // Navigation to Genre

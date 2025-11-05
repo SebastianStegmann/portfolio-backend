@@ -6,6 +6,6 @@ namespace DataServiceLayer.Models.Title;
 
 public class Award
 {
-    public string Tconst { get; set; } = string.Empty;
+    public required string Tconst { get; set; }
     public string? AwardInfo { get; set; }
 }

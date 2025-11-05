@@ -6,7 +6,7 @@ namespace DataServiceLayer.Models.Title;
 
 public class OverallRating
 {
-    public string Tconst { get; set; } = string.Empty;
+    public required string Tconst { get; set; }
     public int Rating { get; set; }
     public int Votes { get; set; }
 }
