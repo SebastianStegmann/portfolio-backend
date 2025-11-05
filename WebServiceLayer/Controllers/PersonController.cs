@@ -4,7 +4,7 @@ using DataServiceLayer.Models.Title;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+// using System.Security.Claims;
 using System.Xml.Linq;
 using WebServiceLayer.Models;
 
@@ -21,22 +21,22 @@ public class PersonController : BaseController<PersonDataService>
         LinkGenerator generator,
         IMapper mapper) : base(dataService, generator, mapper) { }
 
-    private int? GetCurrentUserId()
-    {
-        // // DEV-MODE: return hardcoded user ID
-        // if (USE_DEV_MODE)
-        // {
-        //     return 1;
-        // }
-        // PRODUCTION MODE: Get user ID from JWT token
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
-        {
-            return userId;
-        }
-
-        return null;
-    }
+    // private int? GetCurrentUserId()
+    // {
+    //     // // DEV-MODE: return hardcoded user ID
+    //     // if (USE_DEV_MODE)
+    //     // {
+    //     //     return 1;
+    //     // }
+    //     // PRODUCTION MODE: Get user ID from JWT token
+    //     var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    //     if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+    //     {
+    //         return userId;
+    //     }
+    //
+    //     return null;
+    // }
 
     // Get logged-in person's information OR all persons in dev mode - GET: api/person
     [Authorize]

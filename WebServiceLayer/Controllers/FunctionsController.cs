@@ -3,6 +3,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebServiceLayer.Models;
 using WebServiceLayer.Models.Functions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebServiceLayer.Controllers;
 
@@ -15,16 +16,21 @@ public class FunctionsController : BaseController<FunctionsDataService>
         LinkGenerator generator,
         IMapper mapper) : base(dataService, generator, mapper) { }
 
-    // api/functions/find-names?name=radcliffe&personId=1&limit=10
+    // api/functions/find-names?name=radcliffe&limit=10
+    [Authorize]
     [HttpGet("find-names", Name = nameof(FindNames))]
-    public IActionResult FindNames([FromQuery] string name, [FromQuery] long personId, [FromQuery] int limit = 10)
+    public IActionResult FindNames([FromQuery] string name, [FromQuery] int limit = 10)
     {
+
+        var personId = GetCurrentUserId();
+        if (personId == null) return Unauthorized();
+
         if (string.IsNullOrEmpty(name))
         {
             return BadRequest("Name parameter is required");
         }
         
-        var results = _dataService.FindNames(name, personId, limit);
+        var results = _dataService.FindNames(name, (int)personId, limit);
         return Ok(results);
     }
 
@@ -264,11 +270,17 @@ public class FunctionsController : BaseController<FunctionsDataService>
     */
     // Bookmark Endpoints
 
-    // Add title bookmark - POST: api/functions/bookmarks/title
+    // api/functions/bookmarks/title
+    [Authorize]
     [HttpPost("bookmarks/title", Name = nameof(AddTitleBookmark))]
-    public IActionResult AddTitleBookmark([FromBody] AddTitleBookmarkRequest request)
+    public IActionResult AddTitleBookmark([FromBody] TitleBookmarkRequest request)
     {
-        if (request == null || request.UserId <= 0 || string.IsNullOrEmpty(request.Tconst))
+
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+        if (userId != request.UserId) return Unauthorized();
+
+        if (request == null || string.IsNullOrEmpty(request.Tconst))
         {
             return BadRequest("UserId and Tconst are required");
         }
@@ -277,11 +289,16 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(result);
     }
 
-    // Add name bookmark - POST: api/functions/bookmarks/name
+    // api/functions/bookmarks/name
+    [Authorize]
     [HttpPost("bookmarks/name", Name = nameof(AddNameBookmark))]
-    public IActionResult AddNameBookmark([FromBody] AddNameBookmarkRequest request)
+    public IActionResult AddNameBookmark([FromBody] NameBookmarkRequest request)
     {
-        if (request == null || request.UserId <= 0 || string.IsNullOrEmpty(request.Nconst))
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+        if (userId != request.UserId) return Unauthorized();
+
+        if (request == null || string.IsNullOrEmpty(request.Nconst))
         {
             return BadRequest("UserId and Nconst are required");
         }
@@ -303,12 +320,18 @@ public class FunctionsController : BaseController<FunctionsDataService>
         var results = _dataService.GetUserBookmarks(userId);
         return Ok(results);
     }
+    */
 
     // Delete title bookmark - DELETE: api/functions/bookmarks/title
+    [Authorize]
     [HttpDelete("bookmarks/title", Name = nameof(DeleteTitleBookmark))]
-    public IActionResult DeleteTitleBookmark([FromBody] DeleteTitleBookmarkRequest request)
+    public IActionResult DeleteTitleBookmark([FromBody] TitleBookmarkRequest request)
     {
-        if (request == null || request.UserId <= 0 || string.IsNullOrEmpty(request.Tconst))
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+        if (userId != request.UserId) return Unauthorized();
+
+        if (request == null || string.IsNullOrEmpty(request.Tconst))
         {
             return BadRequest("UserId and Tconst are required");
         }
@@ -318,10 +341,15 @@ public class FunctionsController : BaseController<FunctionsDataService>
     }
 
     // Delete name bookmark - DELETE: api/functions/bookmarks/name
+    [Authorize]
     [HttpDelete("bookmarks/name", Name = nameof(DeleteNameBookmark))]
-    public IActionResult DeleteNameBookmark([FromBody] DeleteNameBookmarkRequest request)
+    public IActionResult DeleteNameBookmark([FromBody] NameBookmarkRequest request)
     {
-        if (request == null || request.UserId <= 0 || string.IsNullOrEmpty(request.Nconst))
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+        if (userId != request.UserId) return Unauthorized();
+
+        if (request == null || string.IsNullOrEmpty(request.Nconst))
         {
             return BadRequest("UserId and Nconst are required");
         }
@@ -330,7 +358,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
         return Ok(result);
     }
     
-    */
+    
 
     // String search - GET: api/functions/string-search?searchString=batman&personId=1
     [HttpGet("string-search", Name = nameof(StringSearch))]

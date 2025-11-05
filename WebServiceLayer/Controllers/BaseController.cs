@@ -3,6 +3,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebServiceLayer.Models;
+using System.Security.Claims;
 
 namespace WebServiceLayer.Controllers
 {
@@ -54,6 +55,24 @@ namespace WebServiceLayer.Controllers
         {
             return _generator.GetUriByName(HttpContext, endpointName, values);
         }
+
+        protected int? GetCurrentUserId()
+        {
+            // // DEV-MODE: return hardcoded user ID
+            // if (USE_DEV_MODE)
+            // {
+            //     return 1;
+            // }
+            // PRODUCTION MODE: Get user ID from JWT token
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+            {
+                return userId;
+            }
+
+            return null;
+        }
+
     }
-    
+
 }

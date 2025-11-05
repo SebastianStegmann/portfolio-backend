@@ -11,7 +11,7 @@ public class FunctionsDataService : BaseDataService
         if (_context == null) Console.WriteLine("Context is null!");
     }
 
-    public List<NameSearchResult> FindNames(string name, long personId, int limitCount = 10)
+    public List<NameSearchResult> FindNames(string name, int personId, int limitCount = 10)
     {
         var results = _context.Database
             .SqlQueryRaw<NameSearchResult>(
