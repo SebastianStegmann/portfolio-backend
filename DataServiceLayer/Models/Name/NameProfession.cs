@@ -6,6 +6,6 @@ namespace DataServiceLayer.Models.Name;
 
 public class NameProfession
 {
-    public string Nconst { get; set; } = string.Empty; // Can never be null, starts as ""
+    public required string Nconst { get; set; }
     public int ProfessionId { get; set; } 
 }

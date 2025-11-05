@@ -7,5 +7,5 @@ namespace DataServiceLayer.Models.Name;
 public class Role
 {
     public int RoleId { get; set; }
-    public string RoleName { get; set; } = string.Empty;
+    public required string RoleName { get; set; }
 }

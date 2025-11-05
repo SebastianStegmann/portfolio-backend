@@ -6,7 +6,7 @@ namespace DataServiceLayer.Models.Name;
 
 public class NameTitleRole
 {
-    public string Nconst { get; set; } = string.Empty;
-    public string Tconst { get; set; } = string.Empty;
+    public required string Nconst { get; set; }
+    public required string Tconst { get; set; }
     public int RoleId { get; set; }
 }

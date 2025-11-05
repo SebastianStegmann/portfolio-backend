@@ -6,6 +6,6 @@ namespace DataServiceLayer.Models.Name;
 
 public class KnownFor
 {
-    public string Nconst { get; set; } = string.Empty; // Can never be null, starts as ""
-    public string Tconst { get; set; } = string.Empty; // Can never be null, starts as ""
+    public required string Nconst { get; set; }
+    public required string Tconst { get; set; }
 }
