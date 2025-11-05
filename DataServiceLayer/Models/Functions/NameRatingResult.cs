@@ -2,7 +2,7 @@ namespace DataServiceLayer.Models.Functions;
 
 public class NameRatingResult
 {
-    public string Nconst { get; set; } = null!;
-    public string Name { get; set; } = null!;
+    public required string Nconst { get; set; }
+    public required string Name { get; set; }
     public decimal? Name_Rating { get; set; }
 }

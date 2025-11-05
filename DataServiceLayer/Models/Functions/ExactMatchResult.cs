@@ -2,5 +2,5 @@ namespace DataServiceLayer.Models.Functions;
 
 public class ExactMatchResult
 {
-    public string Primarytitle { get; set; } = null!;
+    public required string Primarytitle { get; set; }
 }

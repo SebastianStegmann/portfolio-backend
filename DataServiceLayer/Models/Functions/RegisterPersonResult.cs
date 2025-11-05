@@ -2,6 +2,6 @@ namespace DataServiceLayer.Models.Functions;
 
 public class RegisterPersonResult
 {
-    public string Status { get; set; } = null!;
+    public required string Status { get; set; }
     public long? User_Id { get; set; }
 }

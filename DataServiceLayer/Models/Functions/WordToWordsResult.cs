@@ -2,6 +2,6 @@ namespace DataServiceLayer.Models.Functions;
 
 public class WordToWordsResult
 {
-    public string Word { get; set; } = null!;
+    public required string Word { get; set; }
     public int Frequency { get; set; }
 }
