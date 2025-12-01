@@ -107,6 +107,7 @@ public class PersonController : BaseController<PersonDataService>
         var ratingsModels = ratings.Select(b => new RatingsModel
         {
             Tconst = b.Tconst.Trim(),
+            RatingValue = b.RatingValue,
             CreatedAt = b.CreatedAt,
             TitleURL = GetUrl("GetTitle", new { Tconst = b.Tconst.Trim() })
         }).ToList();
