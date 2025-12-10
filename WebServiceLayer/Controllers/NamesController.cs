@@ -19,7 +19,7 @@ public class NamesController : BaseController<NameDataService>
     // Getting all actors - GET: api/names
     [HttpGet(Name = nameof(GetNames))]
     public IActionResult GetNames([FromQuery] QueryParams queryParams)
-    {
+   {
         var names = _dataService
             .GetNames(queryParams.Page, queryParams.PageSize)
             .Select(x => CreateNameListModel(x));
@@ -40,6 +40,34 @@ public class NamesController : BaseController<NameDataService>
         NameModel model = CreateNameModel(name);
 
         return Ok(model);
+    }
+
+    [HttpGet("{nconst}/titles", Name = nameof(GetTitlesByNconst))]
+    public IActionResult GetTitlesByNconst(string nconst)
+    {
+      var titles = _dataService.GetTitlesByNconst(nconst);
+      if (titles == null || titles.Count == 0) return NotFound();
+      var titleListModels = titles.Select(title => new TitleListModel
+          {
+          URL = GetUrl("GetTitle", new { Tconst = title.Tconst.Trim() }),
+          PrimaryTitle = title.PrimaryTitle,
+          TitleType = title.TitleType,
+          ReleaseDate = title.ReleaseDate,
+          Poster = title.Poster,
+          AllCastURL = GetUrl("GetCastForTitle", new { tconst = title.Tconst.Trim() })
+          });
+      return Ok(titleListModels);
+    }
+
+    [HttpGet("{nconst}/profession", Name = nameof(GetNameProfession))]
+    public IActionResult GetNameProfession(string nconst)
+    {
+      var professions = _dataService.GetNameProfessions(nconst);
+
+      if (!professions.Any())
+        return NotFound();
+
+      return Ok(professions);
     }
 
     // Getting the movies that the Actor is known for - GET: api/names/{nconst}/knownfor
