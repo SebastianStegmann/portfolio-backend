@@ -12,7 +12,7 @@ namespace DataServiceLayer;
 public class NameDataService : BaseDataService
 {
   public NameDataService(ImdbContext context) : base(context) {
-  Console.WriteLine("Context injected");
+    Console.WriteLine("Context injected");
     if (_context == null) Console.WriteLine("Context is null!");}
 
   //Name
@@ -22,22 +22,22 @@ public class NameDataService : BaseDataService
     return _context.NameBasics.Count();
   }
 
-    public List<NameBasics> GetNames(int page, int pageSize)
-    {
-        return _context.NameBasics
-            .Include(x => x.Titles)
-            .OrderBy(x => x.Nconst)
-            .Skip(page * pageSize)
-            .Take(pageSize)
-            .ToList();
-    }
-
-    public NameBasics? GetName(string nconst)
+  public List<NameBasics> GetNames(int page, int pageSize)
   {
     return _context.NameBasics
-            .Include(n => n.Titles)
-            .FirstOrDefault(n => n.Nconst == nconst);
- 
+      .Include(x => x.Titles)
+      .OrderBy(x => x.Nconst)
+      .Skip(page * pageSize)
+      .Take(pageSize)
+      .ToList();
+  }
+
+  public NameBasics? GetName(string nconst)
+  {
+    return _context.NameBasics
+      .Include(n => n.Titles)
+      .FirstOrDefault(n => n.Nconst == nconst);
+
   }
 
   // THe movies that the Actor is known for
@@ -52,6 +52,35 @@ public class NameDataService : BaseDataService
       .ToList();
   }
 
+  public List<object> GetNameProfessions(string nconst)
+  {
+    return _context.NameProfessions
+      .Where(np => np.Nconst == nconst)
+      .Join(_context.Professions,
+          np => np.ProfessionId,
+          p => p.Id,
+          (np, p) => new 
+          {
+          Id = p.Id,
+          Name = p.ProfessionName
+          })
+    .ToList<object>();
+  }
+
+  public List<TitleBasics> GetTitlesByNconst(string nconst)
+  {
+    return _context.TitlePrincipals
+      .Where(tp => tp.Nconst == nconst)
+      .Join(_context.TitleBasics,
+          tp => tp.Tconst,
+          tb => tb.Tconst,
+          (tp, tb) => tb)
+      .Distinct()
+      .OrderBy(tb => tb.ReleaseDate)
+      .ToList();
+  }
+
+
   // All professions
   public List<Profession> GetAllProfessions()
   {
@@ -59,10 +88,10 @@ public class NameDataService : BaseDataService
   }
 
 
-    // Helpers
-    // Check if a name has any known titles (queries database directly)
-    public bool HasKnownForTitles(string nconst)
-    {
-        return _context.KnownFors.Any(kf => kf.Nconst == nconst);
-    }
+  // Helpers
+  // Check if a name has any known titles (queries database directly)
+  public bool HasKnownForTitles(string nconst)
+  {
+    return _context.KnownFors.Any(kf => kf.Nconst == nconst);
+  }
 }
