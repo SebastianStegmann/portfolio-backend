@@ -49,11 +49,23 @@ public class PersonDataService : BaseDataService
         return _context.IndividualRatings.Where(r => r.PersonId == personId).ToList();
     }
 
-    /*public async Task AddPersonAsync(Person person)
+    public void UpdatePerson(Person person)
     {
-        _context.Persons.Add(person);
-        await _context.SaveChangesAsync();
+        if (person.Birthday.HasValue)
+        {
+            person.Birthday = DateTime.SpecifyKind(person.Birthday.Value, DateTimeKind.Utc);
+        }
+        
+        if (person.LastLogin.HasValue)
+        {
+            person.LastLogin = DateTime.SpecifyKind(person.LastLogin.Value, DateTimeKind.Utc);
+        }
+        
+        // CreatedAt is required, so always convert it
+        person.CreatedAt = DateTime.SpecifyKind(person.CreatedAt, DateTimeKind.Utc);
+
+        _context.Persons.Update(person);
+        _context.SaveChanges();
     }
-    */
 }
 

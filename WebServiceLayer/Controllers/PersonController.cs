@@ -1,4 +1,4 @@
-using DataServiceLayer;
+﻿using DataServiceLayer;
 using DataServiceLayer.Models.Person;
 using DataServiceLayer.Models.Title;
 using MapsterMapper;
@@ -107,11 +107,43 @@ public class PersonController : BaseController<PersonDataService>
         var ratingsModels = ratings.Select(b => new RatingsModel
         {
             Tconst = b.Tconst.Trim(),
+            RatingValue = b.RatingValue,
             CreatedAt = b.CreatedAt,
             TitleURL = GetUrl("GetTitle", new { Tconst = b.Tconst.Trim() })
         }).ToList();
 
         return Ok(ratingsModels);
+    }
+
+    [HttpPut("profile")]  
+    [Authorize]
+    public IActionResult UpdateProfile([FromBody] UpdateProfileDto profileData)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var person = _dataService.GetPerson(userId.Value);
+        if (person == null) return NotFound();
+
+        // Only update if values are provided
+        if (!string.IsNullOrEmpty(profileData.Name))
+            person.Name = profileData.Name;
+        
+        if (!string.IsNullOrEmpty(profileData.Email))
+            person.Email = profileData.Email;
+        
+        // Only update birthday if explicitly provided (not null)
+        if (profileData.Birthday.HasValue)
+        {
+            person.Birthday = profileData.Birthday;
+        }
+        
+        if (!string.IsNullOrEmpty(profileData.Location))
+            person.Location = profileData.Location;
+
+        _dataService.UpdatePerson(person); 
+
+        return Ok(new { message = "Profile updated successfully" });
     }
 
 
@@ -149,4 +181,12 @@ public class PersonController : BaseController<PersonDataService>
 
         return model;
     }
+}
+
+public class UpdateProfileDto
+{
+    public string? Name { get; init; }
+    public string? Email { get; init; }
+    public DateTime? Birthday { get; init; }
+    public string? Location { get; init; }
 }
