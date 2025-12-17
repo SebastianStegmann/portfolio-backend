@@ -260,14 +260,13 @@ public class FunctionsController : BaseController<FunctionsDataService>
         {
             var userId = GetCurrentUserId();
             if (userId == null) return Unauthorized();
-            // if (userId != request.UserId) return Unauthorized();
 
             if (request == null || string.IsNullOrEmpty(request.Tconst))
             {
-                return BadRequest("UserId and Tconst are required");
+                return BadRequest("Tconst is required");
             }
             
-            var result = _dataService.AddTitleBookmark(request.UserId, request.Tconst);
+            var result = _dataService.AddTitleBookmark((long)userId, request.Tconst);
             return Ok(result);
         }
         catch (Exception)
@@ -289,10 +288,10 @@ public class FunctionsController : BaseController<FunctionsDataService>
 
             if (request == null || string.IsNullOrEmpty(request.Nconst))
             {
-                return BadRequest("UserId and Nconst are required");
+                return BadRequest("Nconst are required");
             }
             
-            var result = _dataService.AddNameBookmark(request.UserId, request.Nconst);
+            var result = _dataService.AddNameBookmark((long)userId, request.Nconst);
             return Ok(result);
         }
         catch (Exception)
@@ -317,7 +316,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
                 return BadRequest("UserId and Tconst are required");
             }
             
-            var result = _dataService.DeleteTitleBookmark(request.UserId, request.Tconst);
+            var result = _dataService.DeleteTitleBookmark((long)userId, request.Tconst);
             return Ok(result);
         }
         catch (Exception)
@@ -342,7 +341,7 @@ public class FunctionsController : BaseController<FunctionsDataService>
                 return BadRequest("UserId and Nconst are required");
             }
             
-            var result = _dataService.DeleteNameBookmark(request.UserId, request.Nconst);
+            var result = _dataService.DeleteNameBookmark((long)userId, request.Nconst);
             return Ok(result);
         }
         catch (Exception)
