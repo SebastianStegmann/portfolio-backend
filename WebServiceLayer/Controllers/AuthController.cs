@@ -19,16 +19,18 @@ public class AuthController : ControllerBase
 {
     private readonly IConfiguration _config;
     private readonly ImdbContext _context;
+    private readonly FunctionsDataService _functionsDataService;
     private const int SaltSize = 16;
     private const int HashSize = 32;
     private const int DegreeOfParallelism = 8;
     private const int Iterations = 4;
     private const int MemorySize = 1024 * 1024;
 
-    public AuthController(IConfiguration config, ImdbContext context)
+    public AuthController(IConfiguration config, ImdbContext context, FunctionsDataService functionsDataService)
     {
         _config = config;
         _context = context;
+        _functionsDataService = functionsDataService;
     }
 
     [HttpPost("login")]
@@ -98,26 +100,34 @@ public class AuthController : ControllerBase
     [HttpPost("delete")]
     public IActionResult Delete([FromBody] RegisterModel model)
     {
-      try
-      {
-        if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password))
-          return BadRequest("Email and password are required.");
+        try
+        {
+            if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password))
+                return BadRequest("Email and password are required.");
 
-        var existing = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
-        if (existing == null)
-          return BadRequest("User doesn't exist.");
+            var existing = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
+            if (existing == null)
+                return BadRequest("User doesn't exist.");
 
-        if (!VerifyPassword(model.Password, existing.Password))
-          return Unauthorized("Invalid password.");
+            if (!VerifyPassword(model.Password, existing.Password))
+                return Unauthorized("Invalid password.");
 
-        _context.Persons.Remove(existing);
-        _context.SaveChanges();
-        return Ok();
-      }
-      catch (Exception)
-      {
-        return StatusCode(500, "An error occurred while deleting the account");
-      }
+            // Use the stored procedure instead of direct EF deletion
+            var result = _functionsDataService.DeleteUser(existing.Id);
+
+            if (result.Status.StartsWith("Success"))
+            {
+                return Ok(new { message = "Account deleted successfully" });
+            }
+            else
+            {
+                return StatusCode(500, result.Status);
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred while deleting the account: {ex.Message}");
+        }
     }
     // HELPERS ##################################
     private string HashPassword(string password)
