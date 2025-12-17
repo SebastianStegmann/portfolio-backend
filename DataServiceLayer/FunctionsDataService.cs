@@ -25,13 +25,13 @@ public class FunctionsDataService : BaseDataService
         return results;
     }
 
-    public List<CoplayerSearchResult> FindCoplayers(string nconst, int personId, int limitCount = 10)
+    public List<CoplayerSearchResult> FindCoplayers(string nconst, int userId, int limitCount = 10)
     {
         var results = _context.Database
             .SqlQueryRaw<CoplayerSearchResult>(
-                "SELECT * FROM find_coplayers({0}, {1}, {2})",
+                "SELECT * FROM find_coplayers({0}, {1})",
                 nconst,
-                personId,
+                userId,
                 limitCount
             )
             .ToList();
@@ -50,29 +50,6 @@ public class FunctionsDataService : BaseDataService
 
         return results.FirstOrDefault();
     }
-
-    // public int SeedNameRatings(List<string> nconsts)
-    // {
-    //     int successCount = 0;
-    //
-    //     foreach (var nconst in nconsts)
-    //     {
-    //         try
-    //         {
-    //             var result = GetNameRating(nconst);
-    //             if (result != null)
-    //             {
-    //                 successCount++;
-    //             }
-    //         }
-    //         catch (Exception ex)
-    //         {
-    //             Console.WriteLine($"Error processing nconst {nconst}: {ex.Message}");
-    //         }
-    //     }
-    //
-    //     return successCount;
-    // }
 
     public List<PopularActorResult> GetPopularActors(string primaryTitle, int limitCount = 10)
     {

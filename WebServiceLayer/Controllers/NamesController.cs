@@ -125,13 +125,11 @@ public class NamesController : BaseController<NameDataService>
   }
   //object-object mapping
 
-  // Information shown when listing all the names
   private NameListModel CreateNameListModel(DataServiceLayer.Models.Name.NameBasics name)
   {
     var model = _mapper.Map<NameListModel>(name);
     model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
 
-    // Check database directly instead of navigation property
     if (_dataService.HasKnownForTitles(name.Nconst.Trim()))
     {
       model.KnownForURL = GetUrl(nameof(GetKnownForTitles), new { nconst = name.Nconst.Trim() });
@@ -140,13 +138,11 @@ public class NamesController : BaseController<NameDataService>
     return model;
   }
 
-  // Information shown when clicking on a specific name
   private NameModel CreateNameModel(DataServiceLayer.Models.Name.NameBasics name)
   {
     var model = _mapper.Map<NameModel>(name);
     model.URL = GetUrl(nameof(GetName), new { Nconst = name.Nconst.Trim() });
 
-    // Check database directly instead of navigation property
     if (_dataService.HasKnownForTitles(name.Nconst.Trim()))
     {
       model.KnownForURL = GetUrl(nameof(GetKnownForTitles), new { nconst = name.Nconst.Trim() });

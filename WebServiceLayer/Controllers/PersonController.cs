@@ -4,7 +4,6 @@ using DataServiceLayer.Models.Title;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-// using System.Security.Claims;
 using System.Xml.Linq;
 using WebServiceLayer.Models;
 
@@ -30,23 +29,6 @@ public IActionResult GetLoggedInPerson()
         var person = _dataService.GetPerson(userId.Value);
         if (person == null) return NotFound();
         var model = CreatePersonListModel(person);
-        return Ok(model);
-    }
-    catch (Exception)
-    {
-        return StatusCode(500, "An error occurred while retrieving person information");
-    }
-}
-
-// api/person/{id}
-[HttpGet("{id}", Name = nameof(GetPerson))]
-public IActionResult GetPerson(int id)
-{
-    try
-    {
-        var person = _dataService.GetPerson(id);
-        if (person == null) return NotFound();
-        PersonModel model = CreatePersonModel(person);
         return Ok(model);
     }
     catch (Exception)
@@ -180,13 +162,12 @@ public IActionResult UpdateProfile([FromBody] UpdateProfileDto profileData)
     }
 }
 
-
     // object-object mapping
     // Information shown when listing all the persons
     private PersonListModel CreatePersonListModel(DataServiceLayer.Models.Person.Person person)
     {
         var model = _mapper.Map<PersonListModel>(person);
-        model.URL = GetUrl(nameof(GetPerson), new { id = person.Id });
+        model.URL = GetUrl(nameof(GetLoggedInPerson), new {});
 
         return model;
     }
@@ -195,7 +176,7 @@ public IActionResult UpdateProfile([FromBody] UpdateProfileDto profileData)
     private PersonModel CreatePersonModel(DataServiceLayer.Models.Person.Person person)
     {
         var model = _mapper.Map<PersonModel>(person);
-        model.URL = GetUrl(nameof(GetPerson), new { id = person.Id });
+        model.URL = GetUrl(nameof(GetLoggedInPerson), new {});
 
         if (person.Search != null && person.Search.Any())
         {
@@ -216,10 +197,3 @@ public IActionResult UpdateProfile([FromBody] UpdateProfileDto profileData)
     }
 }
 
-public class UpdateProfileDto
-{
-    public string? Name { get; init; }
-    public string? Email { get; init; }
-    public DateTime? Birthday { get; init; }
-    public string? Location { get; init; }
-}

@@ -153,7 +153,6 @@ public class TitlesController : BaseController<TitleDataService>
       var cast = _dataService.GetCastForTitle(tconst);
       if (cast == null || cast.Count == 0) return NotFound();
 
-      //Map tp NameListModel with URLs
       var castModel = cast.Select(castName => new CastMemberModel
       {
           URL = GetUrl("GetName", new { Nconst = castName.Nconst.Trim() }),
@@ -161,7 +160,7 @@ public class TitlesController : BaseController<TitleDataService>
           Category = castName.Category,
           Characters = castName.Characters,
           Job = castName.Job,
-          // Only generate KnownForURL if the actor has known for titles
+
           KnownForURL = _dataService.HasKnownForTitles(castName.Nconst.Trim())
           ? GetUrl("GetKnownForTitles", new { nconst = castName.Nconst.Trim() })
           : null
@@ -219,7 +218,6 @@ public class TitlesController : BaseController<TitleDataService>
         var model = _mapper.Map<TitleListModel>(title);
         model.URL = GetUrl(nameof(GetTitle), new { Tconst = title.Tconst.Trim() });
 
-        // Only generate AllCastURL if the movie has registered actors
         if (title.Names != null && title.Names.Any())
         { 
             model.AllCastURL = GetUrl(nameof(GetCastForTitle), new { tconst = title.Tconst.Trim() });

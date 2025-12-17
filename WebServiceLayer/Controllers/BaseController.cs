@@ -58,12 +58,6 @@ namespace WebServiceLayer.Controllers
 
         protected int? GetCurrentUserId()
         {
-            // // DEV-MODE: return hardcoded user ID
-            // if (USE_DEV_MODE)
-            // {
-            //     return 1;
-            // }
-            // PRODUCTION MODE: Get user ID from JWT token
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
             {
