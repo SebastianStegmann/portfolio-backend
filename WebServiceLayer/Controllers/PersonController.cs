@@ -19,91 +19,116 @@ public class PersonController : BaseController<PersonDataService>
         LinkGenerator generator,
         IMapper mapper) : base(dataService, generator, mapper) { }
 
-    [Authorize]
-    [HttpGet(Name = nameof(GetLoggedInPerson))]
-    public IActionResult GetLoggedInPerson()
+[Authorize]
+[HttpGet(Name = nameof(GetLoggedInPerson))]
+public IActionResult GetLoggedInPerson()
+{
+    try
     {
         var userId = GetCurrentUserId();
         if (userId == null) return Unauthorized();
-
         var person = _dataService.GetPerson(userId.Value);
         if (person == null) return NotFound();
-
         var model = CreatePersonListModel(person);
         return Ok(model);
     }
+    catch (Exception)
+    {
+        return StatusCode(500, "An error occurred while retrieving person information");
+    }
+}
 
-    // api/person/{id}
-    [HttpGet("{id}", Name = nameof(GetPerson))]
-    public IActionResult GetPerson(int id)
+// api/person/{id}
+[HttpGet("{id}", Name = nameof(GetPerson))]
+public IActionResult GetPerson(int id)
+{
+    try
     {
         var person = _dataService.GetPerson(id);
         if (person == null) return NotFound();
         PersonModel model = CreatePersonModel(person);
         return Ok(model);
     }
+    catch (Exception)
+    {
+        return StatusCode(500, "An error occurred while retrieving person information");
+    }
+}
 
-    // api/person/searchhistory
-    [Authorize]
-    [HttpGet("searchhistory", Name = nameof(GetSearchHistory))]
-    public IActionResult GetSearchHistory()
+// api/person/searchhistory
+[Authorize]
+[HttpGet("searchhistory", Name = nameof(GetSearchHistory))]
+public IActionResult GetSearchHistory()
+{
+    try
     {
         var userId = GetCurrentUserId();
         if (userId == null) return Unauthorized();
-
         var searchHistory = _dataService.GetSearchHistoriesByPersonId(userId.Value);
         return Ok(searchHistory);
     }
+    catch (Exception)
+    {
+        return StatusCode(500, "An error occurred while retrieving search history");
+    }
+}
 
-    [Authorize]
-    [HttpGet("bookmarks", Name = nameof(GetPersonBookmarks))]
-    public IActionResult GetPersonBookmarks()
+[Authorize]
+[HttpGet("bookmarks", Name = nameof(GetPersonBookmarks))]
+public IActionResult GetPersonBookmarks()
+{
+    try
     {
         var userId = GetCurrentUserId();
         if (userId == null) return Unauthorized();
-
         var bookmarks = _dataService.GetBookmarksByPersonId(userId.Value);
-
         var bookmarkModels = bookmarks.Select(b => new BookmarkModel
         {
             Tconst = b.Tconst.Trim(),
             CreatedAt = b.CreatedAt,
             TitleURL = GetUrl("GetTitle", new { Tconst = b.Tconst.Trim() })
         }).ToList();
-
         return Ok(bookmarkModels);
-
     }
+    catch (Exception)
+    {
+        return StatusCode(500, "An error occurred while retrieving bookmarks");
+    }
+}
 
-    [Authorize]
-    [HttpGet("name_bookmarks", Name = nameof(GetPersonNameBookmarks))]
-    public IActionResult GetPersonNameBookmarks()
+[Authorize]
+[HttpGet("name_bookmarks", Name = nameof(GetPersonNameBookmarks))]
+public IActionResult GetPersonNameBookmarks()
+{
+    try
     {
         var userId = GetCurrentUserId();
         if (userId == null) return Unauthorized();
-
         var bookmarks = _dataService.GetNameBookmarksByPersonId(userId.Value);
-
         var bookmarkModels = bookmarks.Select(b => new NameBookmarkModel
         {
             Nconst = b.Nconst.Trim(),
             CreatedAt = b.CreatedAt,
             TitleURL = GetUrl("GetTitle", new { Tconst = b.Nconst.Trim() })
         }).ToList();
-
         return Ok(bookmarkModels);
     }
+    catch (Exception)
+    {
+        return StatusCode(500, "An error occurred while retrieving name bookmarks");
+    }
+}
 
-    //  api/person/ratings
-    [Authorize]
-    [HttpGet("ratings", Name = nameof(GetPersonRatings))]
-    public IActionResult GetPersonRatings()
+//  api/person/ratings
+[Authorize]
+[HttpGet("ratings", Name = nameof(GetPersonRatings))]
+public IActionResult GetPersonRatings()
+{
+    try
     {
         var userId = GetCurrentUserId();
         if (userId == null) return Unauthorized();
-
         var ratings = _dataService.GetRatingsByPersonId(userId.Value);
-
         var ratingsModels = ratings.Select(b => new RatingsModel
         {
             Tconst = b.Tconst.Trim(),
@@ -111,20 +136,25 @@ public class PersonController : BaseController<PersonDataService>
             CreatedAt = b.CreatedAt,
             TitleURL = GetUrl("GetTitle", new { Tconst = b.Tconst.Trim() })
         }).ToList();
-
         return Ok(ratingsModels);
     }
+    catch (Exception)
+    {
+        return StatusCode(500, "An error occurred while retrieving ratings");
+    }
+}
 
-    [HttpPut("profile")]  
-    [Authorize]
-    public IActionResult UpdateProfile([FromBody] UpdateProfileDto profileData)
+[HttpPut("profile")]  
+[Authorize]
+public IActionResult UpdateProfile([FromBody] UpdateProfileDto profileData)
+{
+    try
     {
         var userId = GetCurrentUserId();
         if (userId == null) return Unauthorized();
-
         var person = _dataService.GetPerson(userId.Value);
         if (person == null) return NotFound();
-
+        
         // Only update if values are provided
         if (!string.IsNullOrEmpty(profileData.Name))
             person.Name = profileData.Name;
@@ -140,12 +170,15 @@ public class PersonController : BaseController<PersonDataService>
         
         if (!string.IsNullOrEmpty(profileData.Location))
             person.Location = profileData.Location;
-
+        
         _dataService.UpdatePerson(person); 
-
         return Ok(new { message = "Profile updated successfully" });
     }
-
+    catch (Exception)
+    {
+        return StatusCode(500, "An error occurred while updating profile");
+    }
+}
 
 
     // object-object mapping

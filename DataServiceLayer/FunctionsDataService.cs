@@ -284,17 +284,21 @@ public class FunctionsDataService : BaseDataService
         return result ?? new StatusResult { Status = "Error: Delete bookmark failed" };
     }
 
-    public List<StringSearchResult> StringSearch(string searchString, int personId)
+    public List<StringSearchResult> StringSearch(string searchString, int personId, int limit = 50)
     {
-        var results = _context.Database
-            .SqlQueryRaw<StringSearchResult>(
-                "SELECT * FROM string_search({0}, {1})",
-                searchString,
-                personId
-            )
-            .ToList();
 
-        return results;
+      var sanitizedLimit = Math.Max(1, Math.Min(limit, 100));
+
+      Console.WriteLine($"Searching for: {searchString}, PersonId: {personId}, Limit: {sanitizedLimit}");
+
+      var results = _context.Database
+        .SqlQueryRaw<StringSearchResult>(
+            $"SELECT * FROM string_search({{0}}, {{1}}) LIMIT {sanitizedLimit}",
+            searchString,
+            personId
+            )
+        .ToList();
+      return results;
     }
 
     public StatusResult RateTitle(string tconst, int personId, int rating)
@@ -318,20 +322,20 @@ public class FunctionsDataService : BaseDataService
         string? characterText,
         string? personText,
         int personId,
-        int limitCount = 10)
+        int limitCount = 50)
     {
-        var results = _context.Database
-            .SqlQueryRaw<StringSearchResult>(
-                "SELECT * FROM structured_string_search({0}, {1}, {2}, {3}, {4}, {5})",
-                titleText,
-                plotText,
-                characterText,
-                personText,
-                personId,
-                limitCount
-            )
-            .ToList();
+      var sanitizedLimit = Math.Max(1, Math.Min(limitCount, 100));
 
-        return results;
+      var results = _context.Database
+        .SqlQueryRaw<StringSearchResult>(
+            $"SELECT * FROM structured_string_search({{0}}, {{1}}, {{2}}, {{3}}, {{4}}) LIMIT {sanitizedLimit}",
+            titleText ?? (object)DBNull.Value,
+            plotText ?? (object)DBNull.Value,
+            characterText ?? (object)DBNull.Value,
+            personText ?? (object)DBNull.Value,
+            personId
+            )
+        .ToList();
+      return results;
     }
 }

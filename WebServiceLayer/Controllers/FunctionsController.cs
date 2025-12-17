@@ -17,21 +17,27 @@ public class FunctionsController : BaseController<FunctionsDataService>
         IMapper mapper) : base(dataService, generator, mapper) { }
 
     // api/functions/find-names?name=radcliffe&limit=10
-    [Authorize]
+[Authorize]
     [HttpGet("find-names", Name = nameof(FindNames))]
     public IActionResult FindNames([FromQuery] string name, [FromQuery] int limit = 10)
     {
-
-        var personId = GetCurrentUserId();
-        if (personId == null) return Unauthorized();
-
-        if (string.IsNullOrEmpty(name))
+        try
         {
-            return BadRequest("Name parameter is required");
+            var personId = GetCurrentUserId();
+            if (personId == null) return Unauthorized();
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Name parameter is required");
+            }
+            
+            var results = _dataService.FindNames(name, (int)personId, limit);
+            return Ok(results);
         }
-        
-        var results = _dataService.FindNames(name, (int)personId, limit);
-        return Ok(results);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while finding names");
+        }
     }
 
     // api/functions/find-coplayers?nconst=nm0705356&limit=10
@@ -39,165 +45,208 @@ public class FunctionsController : BaseController<FunctionsDataService>
     [HttpGet("find-coplayers", Name = nameof(FindCoplayers))]
     public IActionResult FindCoplayers([FromQuery] string nconst, [FromQuery] int limit = 10)
     {
-        var personId = GetCurrentUserId();
-        if (personId == null) return Unauthorized();
-
-        if (string.IsNullOrEmpty(nconst))
+        try
         {
-            return BadRequest("Nconst parameter is required");
+            var personId = GetCurrentUserId();
+            if (personId == null) return Unauthorized();
+
+            if (string.IsNullOrEmpty(nconst))
+            {
+                return BadRequest("Nconst parameter is required");
+            }
+            
+            var results = _dataService.FindCoplayers(nconst, (int)personId, limit);
+            return Ok(results);
         }
-        
-        var results = _dataService.FindCoplayers(nconst, (int)personId, limit);
-        return Ok(results);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while finding coplayers");
+        }
     }
 
     // api/functions/name-rating?nconst=nm0705356
     [HttpGet("name-rating", Name = nameof(GetNameRating))]
     public IActionResult GetNameRating([FromQuery] string nconst)
     {
-        if (string.IsNullOrEmpty(nconst))
+        try
         {
-            return BadRequest("Nconst parameter is required");
+            if (string.IsNullOrEmpty(nconst))
+            {
+                return BadRequest("Nconst parameter is required");
+            }
+            
+            var result = _dataService.GetNameRating(nconst);
+            
+            if (result == null)
+            {
+                return NotFound($"No person found with nconst: {nconst}");
+            }
+            
+            return Ok(result);
         }
-        
-        var result = _dataService.GetNameRating(nconst);
-        
-        if (result == null)
+        catch (Exception)
         {
-            return NotFound($"No person found with nconst: {nconst}");
+            return StatusCode(500, "An error occurred while retrieving name rating");
         }
-        
-        return Ok(result);
     }
-
-    // // api/functions/seed-name-ratings
-    // [HttpPost("seed-name-ratings", Name = nameof(SeedNameRatings))]
-    // public IActionResult SeedNameRatings([FromBody] List<string> nconsts)
-    // {
-    //     if (nconsts == null || nconsts.Count == 0)
-    //     {
-    //         return BadRequest("Nconsts list is required and cannot be empty");
-    //     }
-    //
-    //     var successCount = _dataService.SeedNameRatings(nconsts);
-    //
-    //     return Ok(new 
-    //     { 
-    //         message = "Name ratings seeding completed",
-    //         totalRequested = nconsts.Count,
-    //         successfullyProcessed = successCount,
-    //         failed = nconsts.Count - successCount
-    //     });
-    // }
 
     // api/functions/popular-actors?primaryTitle=Iron man&limit=10
     [HttpGet("popular-actors", Name = nameof(GetPopularActors))]
     public IActionResult GetPopularActors([FromQuery] string primaryTitle, [FromQuery] int limit = 10)
     {
-        if (string.IsNullOrEmpty(primaryTitle))
+        try
         {
-            return BadRequest("PrimaryTitle parameter is required");
+            if (string.IsNullOrEmpty(primaryTitle))
+            {
+                return BadRequest("PrimaryTitle parameter is required");
+            }
+            
+            var results = _dataService.GetPopularActors(primaryTitle, limit);
+            return Ok(results);
         }
-        
-        var results = _dataService.GetPopularActors(primaryTitle, limit);
-        return Ok(results);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while retrieving popular actors");
+        }
     }
 
     // api/functions/popular-coplayers?name=Robert Downey Jr.&limit=10
     [HttpGet("popular-coplayers", Name = nameof(GetPopularCoplayers))]
     public IActionResult GetPopularCoplayers([FromQuery] string name, [FromQuery] int limit = 10)
     {
-        if (string.IsNullOrEmpty(name))
+        try
         {
-            return BadRequest("Name parameter is required");
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Name parameter is required");
+            }
+            
+            var results = _dataService.GetPopularCoplayers(name, limit);
+            return Ok(results);
         }
-        
-        var results = _dataService.GetPopularCoplayers(name, limit);
-        return Ok(results);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while retrieving popular coplayers");
+        }
     }
 
     // api/functions/related-movies?tconst=tt0371746&limit=10
     [HttpGet("related-movies", Name = nameof(GetRelatedMovies))]
     public IActionResult GetRelatedMovies([FromQuery] string tconst, [FromQuery] int limit = 10)
     {
-        if (string.IsNullOrEmpty(tconst))
+        try
         {
-            return BadRequest("Tconst parameter is required");
+            if (string.IsNullOrEmpty(tconst))
+            {
+                return BadRequest("Tconst parameter is required");
+            }
+            
+            var results = _dataService.GetRelatedMovies(tconst, limit);
+            return Ok(results);
         }
-        
-        var results = _dataService.GetRelatedMovies(tconst, limit);
-        return Ok(results);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while retrieving related movies");
+        }
     }
 
     // api/functions/frequent-person-words?name=Tom Hanks&limit=10
     [HttpGet("frequent-person-words", Name = nameof(GetFrequentPersonWords))]
     public IActionResult GetFrequentPersonWords([FromQuery] string name, [FromQuery] int limit = 10)
     {
-        if (string.IsNullOrEmpty(name))
+        try
         {
-            return BadRequest("Name parameter is required");
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Name parameter is required");
+            }
+            
+            var results = _dataService.GetFrequentPersonWords(name, limit);
+            return Ok(results);
         }
-        
-        var results = _dataService.GetFrequentPersonWords(name, limit);
-        return Ok(results);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while retrieving frequent person words");
+        }
     }
 
     // api/functions/exact-match?input=iron man&limit=10
     [HttpGet("exact-match", Name = nameof(GetExactMatch))]
     public IActionResult GetExactMatch([FromQuery] string input, [FromQuery] int limit = 10)
     {
-        if (string.IsNullOrEmpty(input))
+        try
         {
-            return BadRequest("Input parameter is required");
+            if (string.IsNullOrEmpty(input))
+            {
+                return BadRequest("Input parameter is required");
+            }
+            
+            var results = _dataService.GetExactMatch(input, limit);
+            return Ok(results);
         }
-        
-        var results = _dataService.GetExactMatch(input, limit);
-        return Ok(results);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while performing exact match");
+        }
     }
 
     // api/functions/best-match?keywords=iron,man&limit=10
     [HttpGet("best-match", Name = nameof(GetBestMatch))]
     public IActionResult GetBestMatch([FromQuery] string keywords, [FromQuery] int limit = 10)
     {
-        if (string.IsNullOrEmpty(keywords))
+        try
         {
-            return BadRequest("Keywords parameter is required");
+            if (string.IsNullOrEmpty(keywords))
+            {
+                return BadRequest("Keywords parameter is required");
+            }
+            
+            // Split comma-separated keywords
+            var keywordList = keywords.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                       .Select(k => k.Trim())
+                                       .ToList();
+            
+            if (keywordList.Count == 0)
+            {
+                return BadRequest("At least one keyword is required");
+            }
+            
+            var results = _dataService.GetBestMatch(keywordList, limit);
+            return Ok(results);
         }
-        
-        // Split comma-separated keywords
-        var keywordList = keywords.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(k => k.Trim())
-                                   .ToList();
-        
-        if (keywordList.Count == 0)
+        catch (Exception)
         {
-            return BadRequest("At least one keyword is required");
+            return StatusCode(500, "An error occurred while performing best match");
         }
-        
-        var results = _dataService.GetBestMatch(keywordList, limit);
-        return Ok(results);
     }
 
     // api/functions/word-to-words?keywords=iron,man
     [HttpGet("word-to-words", Name = nameof(GetWordToWords))]
     public IActionResult GetWordToWords([FromQuery] string keywords)
     {
-        if (string.IsNullOrWhiteSpace(keywords))
+        try
         {
-            return BadRequest("Keywords parameter is required");
+            if (string.IsNullOrWhiteSpace(keywords))
+            {
+                return BadRequest("Keywords parameter is required");
+            }
+
+            var keywordList = keywords.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                      .Select(k => k.Trim())
+                                      .ToList();
+
+            if (keywordList.Count == 0)
+            {
+                return BadRequest("At least one keyword is required");
+            }
+
+            var results = _dataService.GetWordToWords(keywordList);
+            return Ok(results);
         }
-
-        var keywordList = keywords.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                  .Select(k => k.Trim())
-                                  .ToList();
-
-        if (keywordList.Count == 0)
+        catch (Exception)
         {
-            return BadRequest("At least one keyword is required");
+            return StatusCode(500, "An error occurred while retrieving word associations");
         }
-
-        var results = _dataService.GetWordToWords(keywordList);
-        return Ok(results);
     }
 
     // Bookmark Endpoints
@@ -207,18 +256,24 @@ public class FunctionsController : BaseController<FunctionsDataService>
     [HttpPost("bookmarks/title", Name = nameof(AddTitleBookmark))]
     public IActionResult AddTitleBookmark([FromBody] TitleBookmarkRequest request)
     {
-
-        var userId = GetCurrentUserId();
-        if (userId == null) return Unauthorized();
-        if (userId != request.UserId) return Unauthorized();
-
-        if (request == null || string.IsNullOrEmpty(request.Tconst))
+        try
         {
-            return BadRequest("UserId and Tconst are required");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+            // if (userId != request.UserId) return Unauthorized();
+
+            if (request == null || string.IsNullOrEmpty(request.Tconst))
+            {
+                return BadRequest("UserId and Tconst are required");
+            }
+            
+            var result = _dataService.AddTitleBookmark(request.UserId, request.Tconst);
+            return Ok(result);
         }
-        
-        var result = _dataService.AddTitleBookmark(request.UserId, request.Tconst);
-        return Ok(result);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while adding title bookmark");
+        }
     }
 
     // api/functions/bookmarks/name
@@ -226,17 +281,24 @@ public class FunctionsController : BaseController<FunctionsDataService>
     [HttpPost("bookmarks/name", Name = nameof(AddNameBookmark))]
     public IActionResult AddNameBookmark([FromBody] NameBookmarkRequest request)
     {
-        var userId = GetCurrentUserId();
-        if (userId == null) return Unauthorized();
-        if (userId != request.UserId) return Unauthorized();
-
-        if (request == null || string.IsNullOrEmpty(request.Nconst))
+        try
         {
-            return BadRequest("UserId and Nconst are required");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+            // if (userId != request.UserId) return Unauthorized();
+
+            if (request == null || string.IsNullOrEmpty(request.Nconst))
+            {
+                return BadRequest("UserId and Nconst are required");
+            }
+            
+            var result = _dataService.AddNameBookmark(request.UserId, request.Nconst);
+            return Ok(result);
         }
-        
-        var result = _dataService.AddNameBookmark(request.UserId, request.Nconst);
-        return Ok(result);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while adding name bookmark");
+        }
     }
 
     // Delete title bookmark - DELETE: api/functions/bookmarks/title
@@ -244,17 +306,24 @@ public class FunctionsController : BaseController<FunctionsDataService>
     [HttpDelete("bookmarks/title", Name = nameof(DeleteTitleBookmark))]
     public IActionResult DeleteTitleBookmark([FromBody] TitleBookmarkRequest request)
     {
-        var userId = GetCurrentUserId();
-        if (userId == null) return Unauthorized();
-        if (userId != request.UserId) return Unauthorized();
-
-        if (request == null || string.IsNullOrEmpty(request.Tconst))
+        try
         {
-            return BadRequest("UserId and Tconst are required");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+            // if (userId != request.UserId) return Unauthorized();
+
+            if (request == null || string.IsNullOrEmpty(request.Tconst))
+            {
+                return BadRequest("UserId and Tconst are required");
+            }
+            
+            var result = _dataService.DeleteTitleBookmark(request.UserId, request.Tconst);
+            return Ok(result);
         }
-        
-        var result = _dataService.DeleteTitleBookmark(request.UserId, request.Tconst);
-        return Ok(result);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while deleting title bookmark");
+        }
     }
 
     // Delete name bookmark - DELETE: api/functions/bookmarks/name
@@ -262,41 +331,51 @@ public class FunctionsController : BaseController<FunctionsDataService>
     [HttpDelete("bookmarks/name", Name = nameof(DeleteNameBookmark))]
     public IActionResult DeleteNameBookmark([FromBody] NameBookmarkRequest request)
     {
-        var userId = GetCurrentUserId();
-        if (userId == null) return Unauthorized();
-        if (userId != request.UserId) return Unauthorized();
-
-        if (request == null || string.IsNullOrEmpty(request.Nconst))
+        try
         {
-            return BadRequest("UserId and Nconst are required");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+            // if (userId != request.UserId) return Unauthorized();
+
+            if (request == null || string.IsNullOrEmpty(request.Nconst))
+            {
+                return BadRequest("UserId and Nconst are required");
+            }
+            
+            var result = _dataService.DeleteNameBookmark(request.UserId, request.Nconst);
+            return Ok(result);
         }
-        
-        var result = _dataService.DeleteNameBookmark(request.UserId, request.Nconst);
-        return Ok(result);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while deleting name bookmark");
+        }
     }
-    
-    
 
     // api/functions/string-search?searchString=batman
     [Authorize]
     [HttpGet("string-search", Name = nameof(StringSearch))]
-    public IActionResult StringSearch([FromQuery] string searchString)
+    public IActionResult StringSearch([FromQuery] string searchString, [FromQuery] int? limit)
     {
-        var personId = GetCurrentUserId();
-        if (personId == null) return Unauthorized();
-
-        if (string.IsNullOrEmpty(searchString))
+        try
         {
-            return BadRequest("SearchString parameter is required");
-        }
+            var personId = GetCurrentUserId();
+            if (personId == null) return Unauthorized();
 
-        if (personId <= 0)
-        {
-            return BadRequest("Valid personId is required");
+            if (string.IsNullOrEmpty(searchString))
+            {
+                return BadRequest("SearchString parameter is required");
+            }
+
+            // Enforce max limit
+            var sanitizedLimit = Math.Min(limit ?? 50, 100); // Default 50, max 100
+
+            var results = _dataService.StringSearch(searchString, (int)personId, sanitizedLimit);
+            return Ok(results);
         }
-        
-        var results = _dataService.StringSearch(searchString, (int)personId);
-        return Ok(results);
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while performing string search");
+        }
     }
 
     // api/functions/rate
@@ -304,55 +383,69 @@ public class FunctionsController : BaseController<FunctionsDataService>
     [HttpPost("rate", Name = nameof(RateTitle))]
     public IActionResult RateTitle([FromBody] RateTitleRequest request)
     {
-        var userId = GetCurrentUserId();
-        if (userId == null) return Unauthorized();
-        if (userId != request.PersonId) return Unauthorized();
+        try
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+            // if (userId != request.PersonId) return Unauthorized();
 
-        if (request == null || string.IsNullOrEmpty(request.Tconst) )
-        {
-            return BadRequest("Tconst and PersonId are required");
-        }
+            if (request == null || string.IsNullOrEmpty(request.Tconst))
+            {
+                return BadRequest("Tconst and PersonId are required");
+            }
 
-        if (request.Rating < 1 || request.Rating > 10)
-        {
-            return BadRequest("Rating must be between 1 and 10");
+            if (request.Rating < 1 || request.Rating > 10)
+            {
+                return BadRequest("Rating must be between 1 and 10");
+            }
+            
+            var result = _dataService.RateTitle(request.Tconst, (int)userId, request.Rating);
+            
+            if (result.Status.StartsWith("Error"))
+            {
+                return BadRequest(result);
+            }
+            
+            return Ok(result);
         }
-        
-        var result = _dataService.RateTitle(request.Tconst, (int)userId, request.Rating);
-        
-        if (result.Status.StartsWith("Error"))
+        catch (Exception)
         {
-            return BadRequest(result);
+            return StatusCode(500, "An error occurred while rating the title");
         }
-        
-        return Ok(result);
     }
 
     // api/functions/structured-search
     [Authorize]
     [HttpGet("structured-search", Name = nameof(StructuredStringSearch))]
-    public IActionResult StructuredStringSearch([FromBody] StructuredSearchRequest request)
+    public IActionResult StructuredStringSearch(
+        [FromQuery] string? titleText,
+        [FromQuery] string? plotText,
+        [FromQuery] string? characterText,
+        [FromQuery] string? personText,
+        [FromQuery] int? limit)
     {
-
         var userId = GetCurrentUserId();
-        if (userId == null) return Unauthorized();
-        if (userId != request.PersonId) return Unauthorized();
-
-        if (request == null)
+        if (userId == null) 
         {
-            return BadRequest("Bad query");
+            return Unauthorized();
         }
         
-        var limit = request.Limit ?? 10;
-        var results = _dataService.StructuredStringSearch(
-            request.TitleText,
-            request.PlotText,
-            request.CharacterText,
-            request.PersonText,
-            request.PersonId,
-            limit
-        );
-        
-        return Ok(results);
+        try
+        {
+            var results = _dataService.StructuredStringSearch(
+                titleText,
+                plotText,
+                characterText,
+                personText,
+                userId.Value,
+                limit ?? 10
+            );
+            
+            return Ok(results);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while processing your request");
+        }
     }
 }

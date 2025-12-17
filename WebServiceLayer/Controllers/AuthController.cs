@@ -31,42 +31,72 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginModel model)
     {
+      try
+      {
         var person = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
         if (person != null && VerifyPassword(model.Password, person.Password))
         {
-            var token = GenerateJwtToken(person.Id.ToString());
-            return Ok(new { Token = token });
+          var token = GenerateJwtToken(person.Id.ToString());
+          return Ok(new { Token = token });
         }
         return Unauthorized();
+      }
+      catch (Exception)
+      {
+        return StatusCode(500, "An error occurred during login");
+      }
     }
 
     [HttpPost("register")]
     public IActionResult Register([FromBody] RegisterModel model)
     {
+      try
+      {
         var existing = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
         if (existing != null) return BadRequest("User exists");
-        var person = new Person { Email = model.Email, Password = HashPassword(model.Password), Name = model.Email, CreatedAt = DateTime.UtcNow };
+
+        var person = new Person 
+        { 
+          Email = model.Email, 
+          Password = HashPassword(model.Password), 
+          Name = model.Email, 
+          CreatedAt = DateTime.UtcNow 
+        };
+
         _context.Persons.Add(person);
         _context.SaveChanges();
         return Ok();
+      }
+      catch (Exception)
+      {
+        return StatusCode(500, "An error occurred during registration");
+      }
     }
 
     [HttpPost("delete")]
     public IActionResult Delete([FromBody] RegisterModel model)
     {
+      try
+      {
         if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password))
-            return BadRequest("Email and password are required.");
+          return BadRequest("Email and password are required.");
+
         var existing = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
         if (existing == null)
-            return BadRequest("User doesn't exist.");
+          return BadRequest("User doesn't exist.");
 
         if (!VerifyPassword(model.Password, existing.Password))
-            return Unauthorized("Invalid password.");
+          return Unauthorized("Invalid password.");
+
         _context.Persons.Remove(existing);
         _context.SaveChanges();
         return Ok();
+      }
+      catch (Exception)
+      {
+        return StatusCode(500, "An error occurred while deleting the account");
+      }
     }
-
     // HELPERS ##################################
     private string HashPassword(string password)
     {
