@@ -47,6 +47,13 @@ public class AuthController : ControllerBase
           var token = GenerateJwtToken(person.Id.ToString());
           return Ok(new { Token = token });
         }
+        else {
+          // We do this to prevent 'timing attacks.'
+          // One call tell by response time if there is a user or not if we dont hash in both cases
+
+          VerifyPassword(model.Password, HashPassword("prevent_timing_attacks"));
+        }
+
         return Unauthorized();
       }
       catch (Exception)
