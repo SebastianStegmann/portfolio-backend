@@ -43,7 +43,7 @@ public class AuthController : ControllerBase
           return BadRequest(ModelState);
         }
 
-        var person = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
+        var person = _context.Persons.FirstOrDefault(p => p.Email.ToLower() == model.Email.ToLower());
         if (person != null && VerifyPassword(model.Password, person.Password))
         {
           var token = GenerateJwtToken(person.Id.ToString());
@@ -75,14 +75,14 @@ public class AuthController : ControllerBase
           return BadRequest(ModelState);
         }
 
-        var existing = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
+        var existing = _context.Persons.FirstOrDefault(p => p.Email.ToLower() == model.Email.ToLower());
         if (existing != null) return BadRequest();
 
         var person = new Person 
         { 
-          Email = model.Email, 
+          Email = model.Email.ToLower().Trim(), 
           Password = HashPassword(model.Password), 
-          Name = model.Email, 
+          Name = model.Email.Split('@')[0], 
           CreatedAt = DateTime.UtcNow 
         };
 
@@ -105,14 +105,13 @@ public class AuthController : ControllerBase
             if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password))
                 return BadRequest("Email and password are required.");
 
-            var existing = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
+            var existing = _context.Persons.FirstOrDefault(p => p.Email.ToLower() == model.Email.ToLower());
             if (existing == null)
                 return BadRequest("User doesn't exist.");
 
             if (!VerifyPassword(model.Password, existing.Password))
                 return Unauthorized("Invalid password.");
 
-            // Use the stored procedure instead of direct EF deletion
             var result = _functionsDataService.DeleteUser(existing.Id);
 
             if (result.Status.StartsWith("Success"))

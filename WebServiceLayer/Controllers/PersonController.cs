@@ -13,10 +13,14 @@ namespace WebServiceLayer.Controllers;
 [Route("api/[controller]")]
 public class PersonController : BaseController<PersonDataService>
 {
+
+  private readonly ImdbContext _context;
+
     public PersonController(
         PersonDataService dataService,
         LinkGenerator generator,
-        IMapper mapper) : base(dataService, generator, mapper) { }
+        IMapper mapper,
+        ImdbContext context) : base(dataService, generator, mapper) { _context = context; }
 
 [Authorize]
 [HttpGet(Name = nameof(GetLoggedInPerson))]
@@ -141,9 +145,24 @@ public IActionResult UpdateProfile([FromBody] UpdateProfileDto profileData)
         if (!string.IsNullOrEmpty(profileData.Name))
             person.Name = profileData.Name;
         
-        if (!string.IsNullOrEmpty(profileData.Email))
-            person.Email = profileData.Email;
-        
+       if (!string.IsNullOrEmpty(profileData.Email))
+        {
+            var normalizedEmail = profileData.Email.ToLower().Trim();
+            
+            if (normalizedEmail != person.Email)
+            {
+                var emailExists = _context.Persons.Any(
+                    p => p.Email == normalizedEmail && p.Id != userId
+                );
+                
+                if (emailExists)
+                {
+                    return BadRequest(new { message = "Email is already in use" });
+                }
+                
+                person.Email = normalizedEmail;
+            }
+        } 
         // Only update birthday if explicitly provided (not null)
         if (profileData.Birthday.HasValue)
         {
