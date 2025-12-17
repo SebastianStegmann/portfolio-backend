@@ -8,6 +8,9 @@ using Konscious.Security.Cryptography;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using DataServiceLayer.Models.Person;
+using Microsoft.AspNetCore.Authorization;
+
+
 namespace WebServiceLayer;
 
 [ApiController]
@@ -33,6 +36,11 @@ public class AuthController : ControllerBase
     {
       try
       {
+        if (!ModelState.IsValid)
+        {
+          return BadRequest(ModelState);
+        }
+
         var person = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
         if (person != null && VerifyPassword(model.Password, person.Password))
         {
@@ -52,8 +60,14 @@ public class AuthController : ControllerBase
     {
       try
       {
+
+        if (!ModelState.IsValid)
+        {
+          return BadRequest(ModelState);
+        }
+
         var existing = _context.Persons.FirstOrDefault(p => p.Email == model.Email);
-        if (existing != null) return BadRequest("User exists");
+        if (existing != null) return BadRequest();
 
         var person = new Person 
         { 
@@ -73,6 +87,7 @@ public class AuthController : ControllerBase
       }
     }
 
+    [Authorize]
     [HttpPost("delete")]
     public IActionResult Delete([FromBody] RegisterModel model)
     {
