@@ -64,7 +64,7 @@ public class TitleDataService : BaseDataService
             Name = nb.Name,
             Category = tp.Category,
             Characters = CharacterName(tp.Characters),
-            Job = tp.Job,
+           Job = tp.Job,
             Ordering = tp.Ordering
           })
       .OrderBy(cm => cm.Ordering)
@@ -84,6 +84,52 @@ public class TitleDataService : BaseDataService
     }
 
 
+public bool DeleteRating(string tconst, int personId)
+{
+    using var transaction = _context.Database.BeginTransaction();
+    
+    try
+    {
+        var rating = _context.IndividualRatings
+            .FirstOrDefault(r => r.Tconst == tconst && r.PersonId == personId);
+        
+        if (rating == null)
+        {
+            return false;
+        }
+        
+        var ratingValue = rating.RatingValue;
+        
+        _context.IndividualRatings.Remove(rating);
+        
+        // Save the deletion first
+        _context.SaveChanges();
+        
+        // Now update the overall rating
+        var trimmedTconst = tconst.Trim();
+        var overallRating = _context.OverallRatings
+            .FirstOrDefault(o => o.Tconst == trimmedTconst);
+        
+        if (overallRating != null && overallRating.Votes > 0)
+        {
+            overallRating.Rating -= ratingValue;
+            overallRating.Votes -= 1;
+            
+            // Save the update separately
+            _context.SaveChanges();
+        }
+        
+        transaction.Commit();
+        
+        return true;
+    }
+    catch (Exception ex)
+    {
+        transaction.Rollback();
+        Console.WriteLine($"Error when deleting rating: {ex.Message}");
+        throw;
+    }
+}
     // Helpers
     // Check if a name has any known titles (queries database directly)
     public bool HasKnownForTitles(string nconst)

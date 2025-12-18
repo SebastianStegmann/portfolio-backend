@@ -283,7 +283,7 @@ public class FunctionsDataService : BaseDataService
         var result = _context.Database
             .SqlQueryRaw<StatusResult>(
                 "SELECT * FROM rate({0}, {1}, {2})",
-                tconst,
+                tconst.Trim(),
                 personId,
                 rating
             )

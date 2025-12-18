@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
 using WebServiceLayer.Models;
 using WebServiceLayer.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace WebServiceLayer.Controllers;
 
@@ -226,6 +228,31 @@ public class TitlesController : BaseController<TitleDataService>
             return model;
     }
 
+
+    [Authorize]
+    [HttpDelete("ratings/{tconst}")]
+    public IActionResult DeleteRating(string tconst)
+    {
+      try
+      {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var success = _dataService.DeleteRating(tconst, userId.Value);
+
+        if (!success)
+        {
+          return NotFound(new { message = "Rating not found" });
+        }
+
+        return Ok(new { message = "Rating deleted successfully" });
+      }
+      catch (Exception)
+      {
+        return StatusCode(500, "An error occurred while deleting the rating");
+      }
+    }
+
     // Information shown when clicking on a specific title
     private TitleModel CreateTitleModel(DataServiceLayer.Models.Title.TitleBasics title)
     {
@@ -277,4 +304,6 @@ public class TitlesController : BaseController<TitleDataService>
 
         return model;
     }
+
+
 }
